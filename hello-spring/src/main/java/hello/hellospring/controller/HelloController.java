@@ -27,11 +27,11 @@ public class HelloController {
         model.addAttribute("data1", name);
         return "hello1";
     }
-    @GetMapping("hello-spring")
+    @GetMapping("hello-string")
     // 의미: http 응답 body부에 데이터를 직접 넣어주겠다라는 의미
     @ResponseBody
     public String helloSpring(@RequestParam("name") String name) {
-        return "body로 글자만 " + name; // "hello spring"
+        return "body로 글자만 " + name; // "hello string"
         // 문자가 그대로 내려감
     }
     // params
@@ -41,11 +41,13 @@ public class HelloController {
         return "hello";
     }
 
+    // api 방식
     @GetMapping("hello-api")
     @ResponseBody
     public Hello helloApi(@RequestParam("name") String name) {
         Hello hello = new Hello();
         hello.setName(name);
+        // 객체가 오면 디폴트로 json으로 던짐
         return hello;
     }
 
@@ -54,6 +56,16 @@ public class HelloController {
 
     static class Hello {
         private String name;
+        // 알트 인서트 getter and setter
+        // 자바빈 규약
+        // private이라서 name을 바로 못꺼냄 그래서 라이브러리 같은데서 쓰거나 내가 쓸때
+        // 메서드를 통해서 접근하게됨
+        // 이걸 프로퍼티 접근방식
+        /*
+        * JSON으로 변경할 때 기본으로 필드를 참고하는 것이 아니라 자바빈 프로퍼티 방식 명명 방식을 사용합니다.
+        * 예를 들어서 getName(), setName()은 name이라는 이름의 프로퍼티 이름이 되는 것이지요.
+        * 그래서 getKkkk 는 Kkkk:value가 됨
+        * */
 
         // 꺼낼때는 getName
         public String getName() {
