@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class HelloController {
 
-    // /hello로 들어오면 이 메서드를 호출해줌
     @GetMapping("hello")
     public String hello(Model model) {
         // spring이 model을 만들어서 넣어줌
