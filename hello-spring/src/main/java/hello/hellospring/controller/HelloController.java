@@ -12,17 +12,14 @@ public class HelloController {
 
     @GetMapping("hello")
     public String hello(Model model) {
-        // spring이 model을 만들어서 넣어줌
         model.addAttribute("data", "hello!");
         return "hello";
-        // 템플릿에 있는 hello를 찾아서 데이터를 화면에 넘기면서 이 화면을 렌더링 시켜라
     }
 
     @GetMapping("hello-mvc")
     // required 기본이 true required = false로 하면 안넘겨도됨
     // ctrl + p
-    // /hello-mvc?name=hi
-    public String helloMvc(@RequestParam("name") String name, Model model) {
+    public String helloMvc(@RequestParam(value = "name", required = false) String name, Model model) {
         model.addAttribute("data1", name);
         return "hello1";
     }
