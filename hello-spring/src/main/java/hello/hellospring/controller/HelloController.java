@@ -27,8 +27,7 @@ public class HelloController {
     // 의미: http 응답 body부에 데이터를 직접 넣어주겠다라는 의미
     @ResponseBody
     public String helloSpring(@RequestParam("name") String name) {
-        return "body로 글자만 " + name; // "hello string"
-        // 문자가 그대로 내려감
+        return "hello " + name;
     }
     // params
     @GetMapping("hello/{test}")
