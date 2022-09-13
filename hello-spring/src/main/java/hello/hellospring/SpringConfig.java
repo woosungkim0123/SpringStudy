@@ -1,5 +1,6 @@
 package hello.hellospring;
 
+import hello.hellospring.aop.TimeTraceAop;
 import hello.hellospring.repository.*;
 import hello.hellospring.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ public class SpringConfig {
         return new MemberService(memberRepository());
     }
 */
+
     // 스프링 DATA JPA
     // 멤버서비스에 의존관계 세팅을 해줘야함
     @Bean
@@ -58,7 +60,11 @@ public class SpringConfig {
         return new MemberService(memberRepository);
     }
 
-
+    // 컴포넌트 써도되고 빈등록해서 써도되고 (빈 등록이 좋은듯 이걸 보고 AOP쓰는구나 라고 생각)
+    @Bean
+    public TimeTraceAop timeTraceAop() {
+        return new TimeTraceAop();
+    }
     //@Bean
     //public MemberRepository memberRepository() {
         // return new MemoryMemberRepository();
@@ -70,6 +76,8 @@ public class SpringConfig {
         // jpa
         // return new JpaMemberRepository(em);
 
-
     //}
+    
+
+
 }
