@@ -32,7 +32,7 @@ class MemberServiceIntegrationTest {
         // 주석 달아 놓으면 도움 많이됨
         // given
         Member member = new Member();
-        member.setName("spring");
+        member.setName("spring1");
 
         // when
         Long saveId = memberService.join(member);
