@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-@Repository
+// spring data jpa 사용시 에러떠서 주석
+// 동일타입(MemberRepository)의 빈을 2개 등록해서 발생하는 문제
+//@Repository
 public class MemoryMemberRepository_component implements MemberRepository{
 
     private static Map<Long, Member> store = new HashMap<>(); // 어딘가 저장해야하니 Map사용
