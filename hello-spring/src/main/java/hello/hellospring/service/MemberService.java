@@ -25,11 +25,23 @@ public class MemberService {
     // 회원가입에만 트랜잭셔널이 필요
     @Transactional
     public Long join(Member member) {
+        // 시간측정, 예외가 터져도 찍혀야되서 try ~ finally로
+        // 단순한 시간측정 방법(AOP가 필요한 이유)
+        long start = System.currentTimeMillis();
+        try {
+            validateDuplicateMember(member);
 
+            memberRepository.save(member);
+            return member.getId();
+        } finally {
+            long finish = System.currentTimeMillis();
+            long timeMS = finish - start;
+            System.out.println("join = " +timeMS + "ms");
+        }/*
         validateDuplicateMember(member);
 
         memberRepository.save(member);
-        return member.getId();
+        return member.getId();*/
     }
 
     private void validateDuplicateMember(Member member) {
