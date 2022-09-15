@@ -1,5 +1,6 @@
 package basic.core.member;
 
+// 회원 엔티티
 public class Member {
     private Long id;
     private String name;
