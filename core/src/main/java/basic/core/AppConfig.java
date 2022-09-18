@@ -14,7 +14,7 @@ public class AppConfig {
     public MemberService memberService() {
         return new MemberServiceImpl(memberRepository());
     }
-    private MemberRepository memberRepository() {
+    public MemberRepository memberRepository() {
         return new MemoryMemberRepository();
     }
 
@@ -22,7 +22,7 @@ public class AppConfig {
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
-    private DiscountPolicy discountPolicy() {
+    public DiscountPolicy discountPolicy() {
         return new FixDiscountPolicy();
     }
 }
