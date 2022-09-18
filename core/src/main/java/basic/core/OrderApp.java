@@ -10,8 +10,10 @@ import basic.core.order.OrderServiceImpl;
 
 public class OrderApp {
     public static void main(String[] args) {
-        MemberService memberService = new MemberServiceImpl();
-        OrderService orderService = new OrderServiceImpl();
+        AppConfig appConfig = new AppConfig();
+
+        MemberService memberService = appConfig.memberService();
+        OrderService orderService = appConfig.orderService();
 
         // 일단 VIP회원 만들고
         Long memberId = 1L;
