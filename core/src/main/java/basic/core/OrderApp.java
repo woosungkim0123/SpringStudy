@@ -7,13 +7,20 @@ import basic.core.member.MemberServiceImpl;
 import basic.core.order.Order;
 import basic.core.order.OrderService;
 import basic.core.order.OrderServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class OrderApp {
     public static void main(String[] args) {
-        AppConfig appConfig = new AppConfig();
+//        AppConfig appConfig = new AppConfig();
+//
+//        MemberService memberService = appConfig.memberService();
+//        OrderService orderService = appConfig.orderService();
 
-        MemberService memberService = appConfig.memberService();
-        OrderService orderService = appConfig.orderService();
+        // Spring으로 전환
+        ApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+        MemberService memberService = ac.getBean("memberService", MemberService.class);
+        OrderService orderService = ac.getBean("orderService", OrderService.class);
 
         // 일단 VIP회원 만들고
         Long memberId = 1L;
