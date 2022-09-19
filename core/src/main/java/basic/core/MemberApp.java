@@ -9,11 +9,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class MemberApp {
     public static void main(String[] args) {
-//        AppConfig appConfig = new AppConfig();
-//        MemberService memberService = appConfig.memberService(); // memberSerivce에 memberServiceImpl이 들어가 있음
-        // MemberService memberService = new MemberServiceImpl();
 
-        // Spring으로 전환
         ApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
         MemberService memberService = ac.getBean("memberService", MemberService.class);
 
