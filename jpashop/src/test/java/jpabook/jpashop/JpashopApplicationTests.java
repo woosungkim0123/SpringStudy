@@ -5,10 +5,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class JpashopApplicationTests {
-
+	
 	@Test
 	void contextLoads() {
-		System.out.println("true11 1= " + true);
 	}
 
 }
