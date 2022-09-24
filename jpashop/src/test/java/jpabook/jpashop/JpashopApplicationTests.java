@@ -8,7 +8,7 @@ class JpashopApplicationTests {
 
 	@Test
 	void contextLoads() {
-		System.out.println("true1 = " + true);
+		System.out.println("true11 = " + true);
 	}
 
 }
