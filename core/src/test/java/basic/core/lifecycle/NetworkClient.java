@@ -1,6 +1,9 @@
 package basic.core.lifecycle;
 
-public class NetworkClient {
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+public class NetworkClient implements InitializingBean, DisposableBean {
 
     private String url;
 
@@ -27,4 +30,14 @@ public class NetworkClient {
     }
 
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        connect();
+        call("초기화 연결 메세지");
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        disconnect();
+    }
 }
