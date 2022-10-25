@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -14,15 +15,25 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin(); // 트랜잭션 시작
 
-        // 로직
-        Member member = new Member();
-        member.setId(1L);
-        member.setName("김우성");
-        em.persist(member);
+        try {
+//            Member member = new Member();
+//            member.setId(1L);
+//            member.setName("김우성");
+//            em.persist(member);
 
-        tx.commit();
+            List<Member> result = em.createQuery("select m from Member as m")
+                    .setFirstResult(1) // 1번부터
+                    .setMaxResults(8) // 8개 가져와
+                    .getResultList();
+            System.out.println("result = " + result);
+            tx.commit();
+            em.close();
 
-        em.close();
+        } catch(Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
         emf.close();
     }
 }
