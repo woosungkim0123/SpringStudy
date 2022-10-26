@@ -3,6 +3,7 @@ package hello.springmvc.itemservice.web.basic;
 import hello.springmvc.itemservice.domain.item.Item;
 import hello.springmvc.itemservice.domain.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/basic/items")
 @RequiredArgsConstructor
@@ -37,6 +39,7 @@ public class BasicItemController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
+
         model.addAttribute("item", new Item());
         return "basic/addForm";
     }
@@ -81,6 +84,8 @@ public class BasicItemController {
     }
     @PostMapping("/add")
     public String addItemV6(Item item, RedirectAttributes redirectAttributes) {
+        log.info("item.open={}", item.getOpen());
+
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
