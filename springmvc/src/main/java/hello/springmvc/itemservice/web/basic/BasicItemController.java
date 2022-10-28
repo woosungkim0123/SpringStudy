@@ -2,6 +2,7 @@ package hello.springmvc.itemservice.web.basic;
 
 import hello.springmvc.itemservice.domain.item.Item;
 import hello.springmvc.itemservice.domain.item.ItemRepository;
+import hello.springmvc.itemservice.domain.item.ItemType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,17 @@ public class BasicItemController {
 
 
     @ModelAttribute("regions")
-    public Map<String, String> regions() { Map<String, String> regions = new LinkedHashMap<>();
+    public Map<String, String> regions() {
+        Map<String, String> regions = new LinkedHashMap<>();
         regions.put("SEOUL", "서울");
         regions.put("BUSAN", "부산");
         regions.put("JEJU", "제주");
         return regions;
+    }
+
+    @ModelAttribute("itemTypes")
+    public ItemType[] itemTypes() {
+        return ItemType.values();
     }
 
     @GetMapping
@@ -38,7 +45,9 @@ public class BasicItemController {
         model.addAttribute("items", items);
         return "basic/items";
     }
-    @GetMapping("/{itemId}") public String item(
+
+    @GetMapping("/{itemId}")
+    public String item(
             @PathVariable Long itemId,
             Model model
     ) {
@@ -83,16 +92,18 @@ public class BasicItemController {
 //        return "basic/item";
 //    }
 
-//    @PostMapping("/add")
+    //    @PostMapping("/add")
     public String addItemV4(Item item) {
         itemRepository.save(item);
         return "basic/item";
     }
-//    @PostMapping("/add")
+
+    //    @PostMapping("/add")
     public String addItemV5(Item item) {
         itemRepository.save(item);
         return "redirect:/basic/items/" + item.getId();
     }
+
     @PostMapping("/add")
     public String addItemV6(Item item, RedirectAttributes redirectAttributes) {
         log.info("item.open={}", item.getOpen());
@@ -113,6 +124,7 @@ public class BasicItemController {
         model.addAttribute("item", item);
         return "basic/editForm";
     }
+
     @PostMapping("/{itemId}/edit")
     public String edit(
             @PathVariable Long itemId,
@@ -121,7 +133,6 @@ public class BasicItemController {
         itemRepository.update(itemId, item);
         return "redirect:/basic/items/{itemId}";
     }
-
 
 
     @PostConstruct
