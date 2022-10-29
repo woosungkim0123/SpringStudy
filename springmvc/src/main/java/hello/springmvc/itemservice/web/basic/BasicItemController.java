@@ -1,5 +1,6 @@
 package hello.springmvc.itemservice.web.basic;
 
+import hello.springmvc.itemservice.domain.item.DeliveryType;
 import hello.springmvc.itemservice.domain.item.Item;
 import hello.springmvc.itemservice.domain.item.ItemRepository;
 import hello.springmvc.itemservice.domain.item.ItemType;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,13 @@ public class BasicItemController {
         return ItemType.values();
     }
 
+    @ModelAttribute("deliveryCodes")
+    public List<DeliveryType> deliveryCodes() { List<DeliveryType> deliveryCodes = new ArrayList<>();
+        deliveryCodes.add(new DeliveryType("FAST", "빠른 배송"));
+        deliveryCodes.add(new DeliveryType("NORMAL", "일반 배송"));
+        deliveryCodes.add(new DeliveryType("SLOW", "느린 배송"));
+        return deliveryCodes;
+    }
     @GetMapping
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
