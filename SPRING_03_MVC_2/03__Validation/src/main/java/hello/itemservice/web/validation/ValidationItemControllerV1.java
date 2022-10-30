@@ -1,4 +1,4 @@
-package hello.itemservice.web.form;
+package hello.itemservice.web.validation;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
@@ -11,9 +11,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/form/items")
+@RequestMapping("/validation/v1/items")
 @RequiredArgsConstructor
-public class FormItemController {
+public class ValidationItemControllerV1 {
 
     private final ItemRepository itemRepository;
 
@@ -21,19 +21,20 @@ public class FormItemController {
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
         model.addAttribute("items", items);
-        return "form/items";
+        return "validation/v1/items";
     }
 
     @GetMapping("/{itemId}")
     public String item(@PathVariable long itemId, Model model) {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
-        return "form/item";
+        return "validation/v1/item";
     }
 
     @GetMapping("/add")
-    public String addForm() {
-        return "form/addForm";
+    public String addForm(Model model) {
+        model.addAttribute("item", new Item());
+        return "validation/v1/addForm";
     }
 
     @PostMapping("/add")
@@ -41,20 +42,20 @@ public class FormItemController {
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
-        return "redirect:/form/items/{itemId}";
+        return "redirect:/validation/v1/items/{itemId}";
     }
 
     @GetMapping("/{itemId}/edit")
     public String editForm(@PathVariable Long itemId, Model model) {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
-        return "form/editForm";
+        return "validation/v1/editForm";
     }
 
     @PostMapping("/{itemId}/edit")
     public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
         itemRepository.update(itemId, item);
-        return "redirect:/form/items/{itemId}";
+        return "redirect:/validation/v1/items/{itemId}";
     }
 
 }
