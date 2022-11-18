@@ -16,18 +16,19 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-//            Member member = new Member();
-//            member.setId(1L);
-//            member.setName("김우성");
-//            em.persist(member);
+            Member member = new Member();
+            member.setId(102L);
+            member.setName("김우성");
+            em.persist(member);
 
-            List<Member> result = em.createQuery("select m from Member as m")
-                    .setFirstResult(1) // 1번부터
-                    .setMaxResults(8) // 8개 가져와
-                    .getResultList();
-            System.out.println("result = " + result);
+            Member findMember = em.find(Member.class, 102L);
+            System.out.println("findMember = " + findMember);
+//            List<Member> result = em.createQuery("select m from Member as m")
+//                    .setFirstResult(1) // 1번부터
+//                    .setMaxResults(8) // 8개 가져와
+//                    .getResultList();
+//            System.out.println("result = " + result);
             tx.commit();
-            em.close();
 
         } catch(Exception e) {
             tx.rollback();
