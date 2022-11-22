@@ -120,7 +120,7 @@ public class MemberRepositoryV2 {
         } catch (SQLException e) {
             log.error("db error", e);
             throw e;
-        } finally { //connection은 여기서 닫지 않는다.
+        } finally {
             JdbcUtils.closeStatement(pstmt);
         }
     }
