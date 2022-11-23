@@ -1,5 +1,6 @@
-package hello.jdbc;
+package hello.jdbc.service;
 
+import hello.jdbc.MemberServiceV1;
 import hello.jdbc.domain.Member;
 import hello.jdbc.repository.MemberRepositoryV1;
 import org.assertj.core.api.Assertions;

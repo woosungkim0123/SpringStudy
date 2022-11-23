@@ -1,5 +1,6 @@
-package hello.jdbc;
+package hello.jdbc.service;
 
+import hello.jdbc.MemberServiceV2;
 import hello.jdbc.domain.Member;
 import hello.jdbc.repository.MemberRepositoryV2;
 import org.junit.jupiter.api.AfterEach;
