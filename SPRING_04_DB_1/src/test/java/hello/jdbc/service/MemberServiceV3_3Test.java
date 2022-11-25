@@ -4,9 +4,11 @@ import hello.jdbc.MemberServiceV3_3;
 import hello.jdbc.domain.Member;
 import hello.jdbc.repository.MemberRepositoryV3;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -40,14 +42,17 @@ class MemberServiceV3_3Test {
         DataSource dataSource() {
             return new DriverManagerDataSource(URL, USERNAME, PASSWORD);
         }
+
         @Bean
         PlatformTransactionManager transactionManager() {
             return new DataSourceTransactionManager(dataSource());
         }
+
         @Bean
         MemberRepositoryV3 memberRepositoryV3() {
             return new MemberRepositoryV3(dataSource());
         }
+
         @Bean
         MemberServiceV3_3 memberServiceV3_3() {
             return new MemberServiceV3_3(memberRepositoryV3());
@@ -59,6 +64,14 @@ class MemberServiceV3_3Test {
         memberRepository.delete("memberA");
         memberRepository.delete("memberB");
         memberRepository.delete("ex");
+    }
+
+    @Test
+    void AopCheck() {
+        log.info("memberService class={}", memberService.getClass());
+        log.info("memberRepository class={}", memberRepository.getClass());
+        Assertions.assertThat(AopUtils.isAopProxy(memberService)).isTrue();
+        Assertions.assertThat(AopUtils.isAopProxy(memberRepository)).isFalse();
     }
 
     @Test
