@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 public class UncheckedTest {
+
     @Test
     void unchecked_catch() {
         Service service = new Service();
