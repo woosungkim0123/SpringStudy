@@ -14,7 +14,7 @@ public class UnCheckedAppTest {
     @Test
     void UNWchecked() {
         Controller controller = new Controller();
-        assertThatThrownBy(() -> controller.request()).isInstanceOf(Exception.class);
+        assertThatThrownBy(() -> controller.request()).isInstanceOf(RuntimeSQLException.class);
     }
 
     static class Controller {
