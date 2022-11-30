@@ -12,10 +12,23 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class UnCheckedAppTest {
 
     @Test
-    void UNWchecked() {
+    void unchecked() {
         Controller controller = new Controller();
         assertThatThrownBy(() -> controller.request()).isInstanceOf(RuntimeSQLException.class);
     }
+
+    @Test
+    void printEx() {
+
+        Controller controller = new Controller();
+        try {
+            controller.request();
+        } catch (Exception e) {
+            // e.printStackTrace();
+            log.info("ex", e);
+        }
+    }
+
 
     static class Controller {
         Service service = new Service();
