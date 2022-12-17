@@ -18,7 +18,8 @@ class OrderServiceTest {
     @Autowired OrderService orderService;
     @Autowired OrderRepository orderRepository;
 
-    @Test void complete() throws NotEnoughMoneyException {
+    @Test
+    void complete() throws NotEnoughMoneyException {
         //given
         Order order = new Order();
         order.setUsername("정상");
@@ -31,7 +32,8 @@ class OrderServiceTest {
         assertThat(findOrder.getPayStatus()).isEqualTo("완료");
     }
 
-    @Test void runtimeException() {
+    @Test
+    void runtimeException() {
         //given
         Order order = new Order();
         order.setUsername("예외");
