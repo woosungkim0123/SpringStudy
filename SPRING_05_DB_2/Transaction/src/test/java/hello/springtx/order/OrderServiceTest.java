@@ -43,7 +43,8 @@ class OrderServiceTest {
         assertThat(orderOptional.isEmpty()).isTrue();
     }
 
-    @Test void bizException() {
+    @Test
+    void bizException() {
         //given
         Order order = new Order();
         order.setUsername("잔고부족");
