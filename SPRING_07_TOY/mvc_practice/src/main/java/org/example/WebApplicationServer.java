@@ -17,7 +17,7 @@ public class WebApplicationServer {
         // 임베디드 톰캣이 사용되도록 코드
         String webappDirLocation = "webapps/";
         Tomcat tomcat = new Tomcat();
-        tomcat.setPort(8081);
+        tomcat.setPort(8082);
 
         // 해당 디렉토리를 root 디렉토리로 보고 하위 파일들을 톰캣이 찾아서 실행하는 형태로 동작을 한다는 의미
         tomcat.addWebapp("/", new File(webappDirLocation).getAbsolutePath());
