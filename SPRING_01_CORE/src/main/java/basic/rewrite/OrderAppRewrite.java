@@ -7,15 +7,17 @@ import basic.rewrite.member.MemberServiceRewriteImpl;
 import basic.rewrite.order.OrderRewrite;
 import basic.rewrite.order.OrderServiceRewrite;
 import basic.rewrite.order.OrderServiceRewriteImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class OrderAppRewrite {
 
     public static void main(String[] args) {
 
-        AppConfigRewrite appConfig = new AppConfigRewrite();
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfigRewrite.class);
 
-        MemberServiceRewrite memberService = appConfig.memberServiceRewrite();
-        OrderServiceRewrite orderService = appConfig.orderServiceRewrite();
+        MemberServiceRewrite memberService = applicationContext.getBean("memberServiceRewrite", MemberServiceRewrite.class);
+        OrderServiceRewrite orderService = applicationContext.getBean("orderServiceRewrite", OrderServiceRewrite.class);
 
         long memberId = 1L;
         MemberRewrite member = new MemberRewrite(memberId, "woosung", GradeRewrite.VIP);
