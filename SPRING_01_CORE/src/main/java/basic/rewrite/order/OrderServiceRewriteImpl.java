@@ -9,8 +9,14 @@ import basic.rewrite.member.MemoryMemberRepositoryRewrite;
 
 public class OrderServiceRewriteImpl implements OrderServiceRewrite {
 
-    private final MemberRepositoryRewrite memberRepository = new MemoryMemberRepositoryRewrite();
-    private final DiscountPolicyRewrite discountPolicy = new RateDiscountPolicyRewrite();
+    private final MemberRepositoryRewrite memberRepository;
+    private final DiscountPolicyRewrite discountPolicy;
+
+    public OrderServiceRewriteImpl(MemberRepositoryRewrite memberRepository, DiscountPolicyRewrite discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
+
 
     @Override
     public OrderRewrite createOrder(Long memberId, String itemName, int itemPrice) {

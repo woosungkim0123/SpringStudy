@@ -1,18 +1,29 @@
 package basic.rewrite.order;
 
 
+import basic.rewrite.AppConfigRewrite;
 import basic.rewrite.member.GradeRewrite;
 import basic.rewrite.member.MemberRewrite;
 import basic.rewrite.member.MemberServiceRewrite;
 import basic.rewrite.member.MemberServiceRewriteImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderServiceRewriteTest {
 
-    MemberServiceRewrite memberService = new MemberServiceRewriteImpl();
-    OrderServiceRewrite orderService =  new OrderServiceRewriteImpl();
+    MemberServiceRewrite memberService;
+    OrderServiceRewrite orderService;
+
+    @BeforeEach
+    public void beforeEach() {
+        AppConfigRewrite appConfig = new AppConfigRewrite();
+        memberService = appConfig.memberServiceRewrite();
+        orderService = appConfig.orderServiceRewrite();
+    }
+
+
 
     @Test
     void createOrder() {

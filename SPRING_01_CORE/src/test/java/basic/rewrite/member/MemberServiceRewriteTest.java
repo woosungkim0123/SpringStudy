@@ -1,13 +1,21 @@
 package basic.rewrite.member;
 
 
+import basic.rewrite.AppConfigRewrite;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
 class MemberServiceRewriteTest {
 
-    MemberServiceRewrite memberService = new MemberServiceRewriteImpl();
+    MemberServiceRewrite memberService;
+
+    @BeforeEach
+    public void beforeEach() {
+        AppConfigRewrite appConfig = new AppConfigRewrite();
+        memberService = appConfig.memberServiceRewrite();
+    }
 
     @Test
     void join() {
