@@ -2,6 +2,7 @@ package basic.rewrite.order;
 
 import basic.rewrite.discount.DiscountPolicyRewrite;
 import basic.rewrite.discount.FixDiscountPolicyRewrite;
+import basic.rewrite.discount.RateDiscountPolicyRewrite;
 import basic.rewrite.member.MemberRepositoryRewrite;
 import basic.rewrite.member.MemberRewrite;
 import basic.rewrite.member.MemoryMemberRepositoryRewrite;
@@ -9,7 +10,7 @@ import basic.rewrite.member.MemoryMemberRepositoryRewrite;
 public class OrderServiceRewriteImpl implements OrderServiceRewrite {
 
     private final MemberRepositoryRewrite memberRepository = new MemoryMemberRepositoryRewrite();
-    private final DiscountPolicyRewrite discountPolicy = new FixDiscountPolicyRewrite();
+    private final DiscountPolicyRewrite discountPolicy = new RateDiscountPolicyRewrite();
 
     @Override
     public OrderRewrite createOrder(Long memberId, String itemName, int itemPrice) {
