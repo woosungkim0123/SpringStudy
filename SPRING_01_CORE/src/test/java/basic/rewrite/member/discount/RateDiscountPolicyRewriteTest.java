@@ -1,6 +1,8 @@
-package basic.rewrite.discount;
+package basic.rewrite.member.discount;
 
 
+import basic.rewrite.discount.DiscountPolicyRewrite;
+import basic.rewrite.discount.RateDiscountPolicyRewrite;
 import basic.rewrite.member.GradeRewrite;
 import basic.rewrite.member.MemberRewrite;
 import org.assertj.core.api.Assertions;
