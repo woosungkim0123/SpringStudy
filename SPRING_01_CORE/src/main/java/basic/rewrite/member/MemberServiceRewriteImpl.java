@@ -1,5 +1,7 @@
 package basic.rewrite.member;
 
+import basic.core.member.MemberRepository;
+
 public class MemberServiceRewriteImpl implements MemberServiceRewrite {
 
 
@@ -18,5 +20,9 @@ public class MemberServiceRewriteImpl implements MemberServiceRewrite {
     @Override
     public MemberRewrite findById(Long memberId) {
         return memberRepositoryRewrite.findById(memberId);
+    }
+
+    public MemberRepositoryRewrite getMemberRepository() {
+        return memberRepositoryRewrite;
     }
 }

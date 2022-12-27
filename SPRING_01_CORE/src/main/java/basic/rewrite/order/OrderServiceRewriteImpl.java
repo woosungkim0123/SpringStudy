@@ -1,5 +1,6 @@
 package basic.rewrite.order;
 
+import basic.core.member.MemberRepository;
 import basic.rewrite.discount.DiscountPolicyRewrite;
 import basic.rewrite.discount.FixDiscountPolicyRewrite;
 import basic.rewrite.discount.RateDiscountPolicyRewrite;
@@ -24,5 +25,9 @@ public class OrderServiceRewriteImpl implements OrderServiceRewrite {
         int discountPrice = discountPolicy.discount(member, itemPrice);
 
         return new OrderRewrite(memberId, itemName, itemPrice, discountPrice);
+    }
+
+    public MemberRepositoryRewrite getMemberRepository() {
+        return memberRepository;
     }
 }
