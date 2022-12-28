@@ -1,18 +1,19 @@
 package basic.rewrite.order;
 
-import basic.core.member.MemberRepository;
+
 import basic.rewrite.discount.DiscountPolicyRewrite;
-import basic.rewrite.discount.FixDiscountPolicyRewrite;
-import basic.rewrite.discount.RateDiscountPolicyRewrite;
 import basic.rewrite.member.MemberRepositoryRewrite;
 import basic.rewrite.member.MemberRewrite;
-import basic.rewrite.member.MemoryMemberRepositoryRewrite;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderServiceRewriteImpl implements OrderServiceRewrite {
 
     private final MemberRepositoryRewrite memberRepository;
     private final DiscountPolicyRewrite discountPolicy;
 
+    @Autowired
     public OrderServiceRewriteImpl(MemberRepositoryRewrite memberRepository, DiscountPolicyRewrite discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
