@@ -1,19 +1,14 @@
 package basic.rewrite.member;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class MemberServiceRewriteImpl implements MemberServiceRewrite {
 
-
     private final MemberRepositoryRewrite memberRepositoryRewrite;
-
-    @Autowired
-    public MemberServiceRewriteImpl(MemberRepositoryRewrite memberRepositoryRewrite) {
-        this.memberRepositoryRewrite = memberRepositoryRewrite;
-    }
-
 
     @Override
     public void join(MemberRewrite memberRewrite) {
