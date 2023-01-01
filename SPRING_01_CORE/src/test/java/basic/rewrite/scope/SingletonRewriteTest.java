@@ -2,7 +2,6 @@ package basic.rewrite.scope;
 
 
 import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
 
@@ -11,7 +10,7 @@ import javax.annotation.PreDestroy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SingletonTest {
+public class SingletonRewriteTest {
 
     @Test
     void singletonBeanFind() {
