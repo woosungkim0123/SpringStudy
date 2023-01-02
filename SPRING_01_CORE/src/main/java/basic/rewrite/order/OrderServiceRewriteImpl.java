@@ -12,26 +12,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderServiceRewriteImpl implements OrderServiceRewrite {
 
-    private final MemberRepositoryRewrite memberRepository;
+    private final MemberRepositoryRewrite memberRepositoryRewrite;
     private final DiscountPolicyRewrite discountPolicy;
 
     public OrderServiceRewriteImpl(
-            MemberRepositoryRewrite memberRepository,
+            MemberRepositoryRewrite memberRepositoryRewrite,
             @MainDiscountPolicyRewrite DiscountPolicyRewrite discountPolicy
     ) {
-        this.memberRepository = memberRepository;
+        this.memberRepositoryRewrite = memberRepositoryRewrite;
         this.discountPolicy = discountPolicy;
     }
 
     @Override
     public OrderRewrite createOrder(Long memberId, String itemName, int itemPrice) {
-        MemberRewrite member = memberRepository.findById(memberId);
+        MemberRewrite member = memberRepositoryRewrite.findById(memberId);
         int discountPrice = discountPolicy.discount(member, itemPrice);
 
         return new OrderRewrite(memberId, itemName, itemPrice, discountPrice);
     }
 
     public MemberRepositoryRewrite getMemberRepository() {
-        return memberRepository;
+        return memberRepositoryRewrite;
     }
 }
