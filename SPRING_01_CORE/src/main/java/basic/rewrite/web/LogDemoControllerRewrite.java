@@ -2,6 +2,7 @@ package basic.rewrite.web;
 
 import basic.rewrite.common.MyLoggerRewrite;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,8 +19,7 @@ public class LogDemoControllerRewrite {
     @RequestMapping("log-demo")
     @ResponseBody
     public String logDemo(HttpServletRequest request) {
-        String requestURL;
-        requestURL = request.getRequestURL().toString();
+        String requestURL = request.getRequestURL().toString();
         myLogger.setRequestURL(requestURL);
         myLogger.log("controller test");
         logDemoService.logic("testId");
