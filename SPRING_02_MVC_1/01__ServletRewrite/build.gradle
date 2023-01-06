@@ -21,9 +21,9 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.projectlombok:lombok:1.18.22'
-	testImplementation 'org.projectlombok:lombok:1.18.22'
-	testImplementation 'org.projectlombok:lombok:1.18.22'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	implementation 'javax.servlet:jstl'
+	testImplementation 'org.projectlombok:lombok:1.18.24'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
