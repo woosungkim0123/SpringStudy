@@ -65,6 +65,7 @@ public class ValidationItemControllerV2 {
             }
         }
         if(bindingResult.hasErrors()) {
+            log.info("여기옴");
             log.info("errors={}", bindingResult);
             return "validation/v2/addForm";
         }
