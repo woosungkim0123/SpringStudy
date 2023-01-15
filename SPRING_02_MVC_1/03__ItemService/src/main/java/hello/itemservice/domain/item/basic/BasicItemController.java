@@ -22,7 +22,7 @@ public class BasicItemController {
     @GetMapping
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
-        model.addAttribute(items);
+        model.addAttribute("items", items);
         return "basic/items";
     }
 
