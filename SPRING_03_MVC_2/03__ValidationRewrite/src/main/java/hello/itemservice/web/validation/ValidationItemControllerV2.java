@@ -61,11 +61,6 @@ public class ValidationItemControllerV2 {
             return "validation/v2/addForm";
         }
 
-        if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
-            return "validation/v2/addForm";
-        }
-
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
