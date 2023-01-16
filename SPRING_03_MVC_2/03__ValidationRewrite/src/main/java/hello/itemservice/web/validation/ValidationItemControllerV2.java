@@ -46,22 +46,48 @@ public class ValidationItemControllerV2 {
     }
 
     @PostMapping("/add")
-    public String addItemV1(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String addItem(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if(!StringUtils.hasText(item.getItemName())) {
-            bindingResult.addError(new FieldError("item", "itemName", item.getItemName(), false, null, null, "상품 이름은 필수입니다."));
+            bindingResult.addError(new FieldError(
+                    "item",
+                    "itemName",
+                    item.getItemName(),
+                    false,
+                    new String[]{"required.item.itemName"},
+                    null,
+                    null
+            ));
         }
         if(item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1000000) {
-            bindingResult.addError(new FieldError("item", "price", item.getPrice(), false, null, null, "가격은 1,000 ~ 1,000,000 까지 허용합니다."));
+            bindingResult.addError(new FieldError(
+                    "item",
+                    "price",
+                    item.getPrice(),
+                    false,
+                    new String[]{"range.item.price"},
+                    new Object[]{1000, 1000000},
+                    null));
         }
         if(item.getQuantity() == null || item.getQuantity() >= 9999) {
-            bindingResult.addError(new FieldError("item", "quantity", item.getQuantity(), false, null, null, "수량은 최대 9,999 까지 허용합니다."));
+            bindingResult.addError(new FieldError(
+                    "item",
+                    "quantity",
+                    item.getQuantity(),
+                    false,
+                    new String[]{"max.item.quantity"},
+                    new Object[]{"9,999"},
+                    null));
         }
 
         if(item.getPrice() != null && item.getQuantity() != null) {
             int resultPrice = item.getPrice() * item.getQuantity();
             if(resultPrice < 10000) {
-                bindingResult.addError(new ObjectError("item", null, null, "최종가격은 10000원을 넘어야합니다. 현재값 = " + resultPrice));
+                bindingResult.addError(new ObjectError(
+                        "item",
+                        new String[]{"totalPriceMin"},
+                        new Object[]{10000, resultPrice},
+                        null));
             }
         }
         if(bindingResult.hasErrors()) {
