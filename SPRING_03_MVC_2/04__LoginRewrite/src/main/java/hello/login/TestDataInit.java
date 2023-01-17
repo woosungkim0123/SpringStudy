@@ -21,7 +21,6 @@ public class TestDataInit {
      */
     @PostConstruct
     public void init() {
-        System.out.println("의존성 주입 끝나고 실행");
         itemRepository.save(new Item("itemA", 10000, 10));
         itemRepository.save(new Item("itemB", 20000, 20));
 
