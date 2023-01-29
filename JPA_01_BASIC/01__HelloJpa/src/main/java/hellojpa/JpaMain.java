@@ -19,7 +19,6 @@ public class JpaMain {
 
             Member member = new Member(300L, "플러시테스트");
             em.persist(member);
-
             em.flush();
 
             System.out.println("==============");
