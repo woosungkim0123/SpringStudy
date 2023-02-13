@@ -16,13 +16,6 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-
-            Member member = new Member(300L, "플러시테스트");
-            em.persist(member);
-            em.flush();
-
-            System.out.println("==============");
-
             tx.commit();
         } catch(Exception e) {
             tx.rollback();
