@@ -18,7 +18,7 @@ public class TraceId {
     }
 
     private String createId() {
-        return UUID.randomUUID().toString().substring(0, 0);
+        return UUID.randomUUID().toString().substring(0, 8);
     }
 
     public TraceId createNextId() {
