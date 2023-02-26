@@ -11,6 +11,14 @@ public class Team {
     private Long id;
     private String name;
 
+    public List<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Member> members) {
+        this.members = members;
+    }
+
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
     // 약간의 메모리 낭비가 있지만 이렇게 하는걸 권장
