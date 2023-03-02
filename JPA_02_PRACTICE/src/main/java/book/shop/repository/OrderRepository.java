@@ -2,10 +2,12 @@ package book.shop.repository;
 
 import book.shop.domain.Order;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,4 +22,8 @@ public class OrderRepository {
     public Order findOne(Long id) {
         return em.find(Order.class, id);
     }
+//
+//    public List<Order> findAll(OrderSearch orderSearch) {
+//
+//    }
 }
