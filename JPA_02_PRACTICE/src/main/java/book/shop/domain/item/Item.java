@@ -2,6 +2,7 @@ package book.shop.domain.item;
 
 import book.shop.domain.Category;
 import book.shop.exception.NotEnoughStockException;
+import book.shop.service.UpdateItemDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,5 +36,11 @@ public abstract class Item {
             throw new NotEnoughStockException("need more stock");
         }
         this.stockQuantity = restStock;
+    }
+
+    public void changeItem(UpdateItemDto updateItemDto) {
+        this.name = updateItemDto.getName();
+        this.price = updateItemDto.getPrice();
+        this.stockQuantity = updateItemDto.getStockQuantity();
     }
 }

@@ -1,9 +1,8 @@
 package book.shop.service;
 
-import book.shop.domain.Member;
+import book.shop.domain.item.Book;
 import book.shop.domain.item.Item;
 import book.shop.repository.ItemRepository;
-import book.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,4 +29,9 @@ public class ItemService {
         return itemRepository.findOne(itemId);
     }
 
+    @Transactional
+    public void updateItem(Long itemId, UpdateItemDto updateItemDto) {
+        Item findItem = itemRepository.findOne(itemId);
+        findItem.changeItem(updateItemDto);
+    }
 }
