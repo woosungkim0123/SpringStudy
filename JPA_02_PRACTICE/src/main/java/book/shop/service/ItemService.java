@@ -32,6 +32,7 @@ public class ItemService {
     @Transactional
     public void updateItem(Long itemId, UpdateItemDto updateItemDto) {
         Item findItem = itemRepository.findOne(itemId);
+        System.out.println("findItem = " + findItem);
         findItem.changeItem(updateItemDto);
     }
 }
