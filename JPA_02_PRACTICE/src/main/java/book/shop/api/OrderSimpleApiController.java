@@ -5,6 +5,7 @@ import book.shop.domain.Order;
 import book.shop.domain.OrderSearch;
 import book.shop.domain.OrderStatus;
 import book.shop.repository.OrderRepository;
+import book.shop.repository.OrderSimpleQueryDto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,20 @@ public class OrderSimpleApiController {
                 .map(SimpleOrderDto::new)
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/api/v3/simple-orders")
+    public List<SimpleOrderDto> ordersV3(){
+        return orderRepository.findAllWithMemberDelivery()
+                .stream()
+                .map(SimpleOrderDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/v4/simple-orders")
+    public List<OrderSimpleQueryDto> ordersV4(){
+        return orderRepository.findOrderDtos();
+    }
+
 
     @Data
     static class SimpleOrderDto {
