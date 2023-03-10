@@ -4,7 +4,7 @@ import book.shop.domain.*;
 import book.shop.domain.OrderSearch;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Repository;
 
 import org.springframework.util.StringUtils;
