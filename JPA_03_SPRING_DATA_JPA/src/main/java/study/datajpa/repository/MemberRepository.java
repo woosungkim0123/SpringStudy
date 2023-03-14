@@ -7,8 +7,10 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByUsername(String username);
 
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age);
 

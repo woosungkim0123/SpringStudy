@@ -88,4 +88,15 @@ class MemberRepositoryTest {
         assertThat(result.size()).isEqualTo(1);
     }
 
+    @Test
+    public void returnType() {
+        Member member1 = new Member("AAA", 10);
+        Member member2 = new Member("ABB", 20);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        Optional<Member> result = memberRepository.findByUsername("CCC");
+        Member member = result.orElse(null);
+        System.out.println("member = " + member);
+    }
 }
