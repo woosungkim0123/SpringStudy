@@ -33,7 +33,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Slice<Member> findSliceByAge(int age, Pageable pageable);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update Member m set m.age = m.age + 1 where m.age >= :age")
     int bulkAgePlus(@Param("age") int age);
 }
