@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class MemberJpaRepositoryTest {
 
-    @Autowired MemberJpaRepository memberJpaRepository;
+    @Autowired
+    MemberJpaRepository memberJpaRepository;
 
     @Test
     public void testMember() {
@@ -29,6 +30,7 @@ class MemberJpaRepositoryTest {
         assertThat(savedMember.getId()).isEqualTo(findMember.getId());
         assertThat(savedMember.getUsername()).isEqualTo(findMember.getUsername());
     }
+
     @Test
     public void basicCRUD() {
         Member member1 = new Member("member1");
@@ -74,7 +76,7 @@ class MemberJpaRepositoryTest {
     }
 
     @Test
-    public void paging(){
+    public void paging() {
         // given
         memberJpaRepository.save(new Member("member1", 10));
         memberJpaRepository.save(new Member("member2", 10));
@@ -93,6 +95,19 @@ class MemberJpaRepositoryTest {
         assertThat(members.size()).isEqualTo(3);
         assertThat(totalCount).isEqualTo(5);
 
+    }
+
+    @Test
+    public void bulkUpdate() {
+        memberJpaRepository.save(new Member("member1", 10));
+        memberJpaRepository.save(new Member("member2", 19));
+        memberJpaRepository.save(new Member("member3", 20));
+        memberJpaRepository.save(new Member("member4", 21));
+        memberJpaRepository.save(new Member("member5", 40));
+
+        int resultCount = memberJpaRepository.bulkAgePlus(20);
+
+        assertThat(resultCount).isEqualTo(3);
     }
 
 }
