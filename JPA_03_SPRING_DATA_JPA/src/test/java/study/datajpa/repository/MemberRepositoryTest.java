@@ -11,6 +11,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class MemberRepositoryTest {
 
     @Autowired MemberRepository memberRepository;
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember() {
@@ -155,6 +159,19 @@ class MemberRepositoryTest {
         assertThat(page.getNumber()).isEqualTo(0);
         assertThat(page.isFirst()).isTrue();
         assertThat(page.hasNext()).isTrue();
+
+    }
+
+    @Test
+    public void queryHint() {
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+
+        Member findMember = memberRepository.findReadOnlyByUsername(member1.getUsername());
+        findMember.setUsername("member2");
+
+        em.flush();
 
     }
 
