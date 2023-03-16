@@ -192,4 +192,20 @@ class MemberRepositoryTest {
         }
 
     }
+
+    @Test
+    public void nativeQuery() {
+
+        Member m1 = new Member("m1", 0);
+        Member m2 = new Member("m2", 0);
+        em.persist(m1);
+        em.persist(m2);
+        em.flush();
+        em.clear();
+
+        Member result = memberRepository.findByNativeQuery("m1");
+        System.out.println("result = " + result);
+
+    }
+
 }

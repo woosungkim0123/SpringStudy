@@ -48,4 +48,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
     Member findReadOnlyByUsername(String username);
 
     List<UsernameOnly> findProjectionByUsername(String username);
+
+    @Query(value = "select * from member where username = ?", nativeQuery = true)
+    Member findByNativeQuery(String username);
 }
