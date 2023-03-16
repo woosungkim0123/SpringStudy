@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(false)
 class MemberRepositoryTest {
 
     @Autowired MemberRepository memberRepository;
@@ -175,5 +175,21 @@ class MemberRepositoryTest {
 
     }
 
+    @Test
+    public void projections() {
 
+        Member m1 = new Member("m1", 0);
+        Member m2 = new Member("m2", 0);
+        em.persist(m1);
+        em.persist(m2);
+        em.flush();
+        em.clear();
+
+        List<UsernameOnly> result = memberRepository.findProjectionByUsername("m1");
+
+        for (UsernameOnly usernameOnly : result) {
+            System.out.println("usernameOnly = " + usernameOnly);
+        }
+
+    }
 }

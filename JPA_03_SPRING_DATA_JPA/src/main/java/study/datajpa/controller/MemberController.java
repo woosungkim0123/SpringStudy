@@ -26,7 +26,7 @@ public class MemberController {
         return member.getUsername();
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         memberRepository.save(new Member("userA"));
     }
