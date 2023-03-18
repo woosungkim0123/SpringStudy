@@ -2,9 +2,8 @@ package study.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.entity.Hello;
@@ -16,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 class QuerydslApplicationTests {
 
-	@Autowired
+	@PersistenceContext
 	EntityManager em;
 
 	@Test
