@@ -1,5 +1,7 @@
 package study.querydsl;
 
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -11,6 +13,8 @@ import study.querydsl.entity.Member;
 import study.querydsl.entity.QMember;
 import study.querydsl.entity.Team;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 import static study.querydsl.entity.QMember.*;
 
@@ -19,9 +23,11 @@ import static study.querydsl.entity.QMember.*;
 public class QuerydslBasicTest {
 
     @PersistenceContext EntityManager em;
+    JPAQueryFactory queryFactory;
 
     @BeforeEach
     public void before() {
+        queryFactory = new JPAQueryFactory(em);
         Team teamA = new Team("teamA");
         Team teamB = new Team("teamB");
         em.persist(teamA);
@@ -47,7 +53,7 @@ public class QuerydslBasicTest {
 
     @Test
     public void startQuerydsl() {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
         Member findMember = queryFactory
                 .select(member)
                 .from(member)
@@ -57,4 +63,35 @@ public class QuerydslBasicTest {
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
 
+    @Test
+    public void search() {
+        Member findMember = queryFactory
+                .selectFrom(member)
+                .where(member.username.eq("member1")
+                        .and(member.age.eq(10)))
+                .fetchOne();
+        assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    public void resultFetch() {
+        List<Member> fetch = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        Member member1 = queryFactory
+                .selectFrom(member)
+                .fetchOne();
+
+        Member member2 = queryFactory
+                .selectFrom(member)
+                .fetchFirst();
+
+        Long totalCount = queryFactory
+                .select(Wildcard.count)
+                .select(member.count())
+                .from(member)
+                .fetchOne();
+
+    }
 }
