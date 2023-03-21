@@ -1,6 +1,5 @@
 package study.querydsl;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -9,10 +8,10 @@ import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.QMember;
-import study.querydsl.entity.QTeam;
 import study.querydsl.entity.Team;
 
 import java.util.List;
@@ -81,19 +80,19 @@ public class QuerydslBasicTest {
         List<Member> fetch = queryFactory
                 .selectFrom(member)
                 .fetch();
-
-        Member member1 = queryFactory
-                .selectFrom(member)
+        /*
+        Member member = queryFactory
+                .selectFrom(QMember.member)
                 .fetchOne();
-
+        */
         Member member2 = queryFactory
-                .selectFrom(member)
+                .selectFrom(QMember.member)
                 .fetchFirst();
 
         Long totalCount = queryFactory
                 .select(Wildcard.count)
-                .select(member.count())
-                .from(member)
+                .select(QMember.member.count())
+                .from(QMember.member)
                 .fetchOne();
 
     }
@@ -170,6 +169,29 @@ public class QuerydslBasicTest {
         assertThat(teamB.get(team.name)).isEqualTo("teamB");
         assertThat(teamB.get(member.age.avg())).isEqualTo(35);
 
+    }
+
+    @Test
+    public void join() {
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .join(member.team, team)
+                .where(team.name.eq("teamA"))
+                .fetch();
+        assertThat(result).extracting("username").containsExactly("member1", "member2");
+    }
+
+    @Test
+    public void theta_join() {
+        em.persist(new Member("teamA"));
+        em.persist(new Member("teamB"));
+        List<Member> result = queryFactory
+                .select(member)
+                .from(member, team)
+                .where(member.username.eq(team.name))
+                .fetch();
+
+        assertThat(result) .extracting("username") .containsExactly("teamA", "teamB");
     }
 
 }
