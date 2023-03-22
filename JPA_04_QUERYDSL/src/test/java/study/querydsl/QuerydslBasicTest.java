@@ -449,4 +449,15 @@ public class QuerydslBasicTest {
     }
 
 
+    @Test
+    public void bulkUpdate() {
+        long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+
+        System.out.println("count = " + count);
+    }
+
 }
