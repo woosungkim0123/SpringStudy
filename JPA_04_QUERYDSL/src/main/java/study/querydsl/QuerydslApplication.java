@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class QuerydslApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(QuerydslApplication.class, args);
 	}
@@ -18,4 +17,5 @@ public class QuerydslApplication {
 	JPAQueryFactory jpaQueryFactory(EntityManager em) {
 		return new JPAQueryFactory(em);
 	}
+
 }
