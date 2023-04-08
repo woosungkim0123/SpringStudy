@@ -4,18 +4,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
-        EntityManager em = emf.createEntityManager(); // 데이터베이스 커넥션 하나 받았다고 생각하면 쉬움
+        EntityManager em = emf.createEntityManager();
 
         EntityTransaction tx = em.getTransaction();
-        tx.begin(); // 트랜잭션 시작
+        tx.begin();
 
         try {
+            // 실제 로직이 들어갈 위치
+
             tx.commit();
         } catch(Exception e) {
             tx.rollback();
