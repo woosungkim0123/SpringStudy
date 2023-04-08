@@ -15,7 +15,7 @@ public class JpaMain {
         tx.begin();
 
         try {
-            // 실제 로직이 들어갈 위치
+            // code logic location
 
             tx.commit();
         } catch(Exception e) {
