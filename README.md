@@ -6,7 +6,7 @@ This repository is dedicated to studying Spring and JPA.
 
 ## Topics
 
-- Spring (Java)
+- Spring (Java 11)
 - JPA
 
 ## Reference
