@@ -1,0 +1,63 @@
+rootProject.name = 'spring_jpa_deep_dive'
+
+// SPRING_00_HELLO
+include "spring_basic"
+
+// SPRING_01_CORE
+include "spring_core"
+
+// SPRING_02_MVC1
+include "servlet"
+project(':servlet').projectDir = new File('spring_mvc_basic/servlet')
+include "use_mvc"
+project(':use_mvc').projectDir = new File('spring_mvc_basic/use_mvc')
+include "item_service"
+project(':item_service').projectDir = new File('spring_mvc_basic/item_service')
+
+// SPRING_03_MVC2
+include "form"
+project(':form').projectDir = new File('spring_mvc_advance/01_form')
+include "use_thymeleaf"
+project(':use_thymeleaf').projectDir = new File('spring_mvc_advance/01_use_thymeleaf')
+include "message_global"
+project(':message_global').projectDir = new File('spring_mvc_advance/02_message_global')
+include "validation"
+project(':validation').projectDir = new File('spring_mvc_advance/03_validation')
+include "login"
+project(':login').projectDir = new File('spring_mvc_advance/04_login')
+include "exception"
+project(':exception').projectDir = new File('spring_mvc_advance/05_exception')
+include "type_converter"
+project(':type_converter').projectDir = new File('spring_mvc_advance/06_type_converter')
+include "file_upload"
+project(':file_upload').projectDir = new File('spring_mvc_advance/07_file_upload')
+
+// SPRING 04_DB1
+include "spring_jdbc_basic"
+
+// SPRING_05_DB2
+include "access_data_skills"
+project(':access_data_skills').projectDir = new File('spring_jdbc_advance/access_data_skills')
+include "transaction"
+project(':transaction').projectDir = new File('spring_jdbc_advance/transaction')
+
+// SPRING_06_ADVANCED
+include "log_tracker"
+project(':log_tracker').projectDir = new File('spring_advance/log_tracker')
+
+// JPA_01_BASIC
+include "jpa_book"
+project(':jpa_book').projectDir = new File('jpa_basic/jpa_book')
+include "jpql"
+project(':jpql').projectDir = new File('jpa_basic/jpql')
+include "before_abstraction"
+project(':before_abstraction').projectDir = new File('jpa_basic/before_abstraction')
+
+// JPA_02_PRACTICE
+include "jpa_practice"
+
+// JPA_03_SPRING_DATA_JPA
+include "jpa_spring_data_jpa"
+
+// JPA_04_QUERYDSL
+include "jpa_querydsl"
