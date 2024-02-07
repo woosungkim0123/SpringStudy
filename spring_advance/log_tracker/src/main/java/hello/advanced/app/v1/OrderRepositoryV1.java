@@ -1,7 +1,7 @@
 package hello.advanced.app.v1;
 
-import hello.advanced.trace.TraceStatus;
-import hello.advanced.trace.hellotrace.HelloTraceV1;
+import hello.advanced.app.common.TraceStatus;
+import hello.advanced.app.v1.trace.TraceV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class OrderRepositoryV1 {
 
-    private final HelloTraceV1 trace;
+    private final TraceV1 trace;
 
     public void save(String itemId) {
-
         TraceStatus status = null;
+
         try {
             status = trace.begin("OrderRepositoryV1.save(()");
 
@@ -24,12 +24,11 @@ public class OrderRepositoryV1 {
             sleep(1000);
 
             trace.end(status);
+
         } catch (Exception e) {
             trace.exception(status, e);
             throw e;
         }
-
-
     }
 
     void sleep(int millis) {

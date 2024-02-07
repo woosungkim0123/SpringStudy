@@ -1,8 +1,7 @@
 package hello.advanced.app.v3;
 
-import hello.advanced.trace.TraceId;
-import hello.advanced.trace.TraceStatus;
-import hello.advanced.trace.logtrace.LogTrace;
+import hello.advanced.app.common.TraceStatus;
+import hello.advanced.app.common.LogTrace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,5 @@ public class OrderServiceV3 {
             trace.exception(status, e);
             throw e;
         }
-
     }
-
 }

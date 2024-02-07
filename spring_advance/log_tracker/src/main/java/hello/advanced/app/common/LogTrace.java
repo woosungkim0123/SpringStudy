@@ -1,6 +1,6 @@
-package hello.advanced.trace.logtrace;
+package hello.advanced.app.common;
 
-import hello.advanced.trace.TraceStatus;
+import hello.advanced.app.common.TraceStatus;
 
 public interface LogTrace {
 

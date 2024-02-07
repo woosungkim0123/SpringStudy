@@ -1,7 +1,7 @@
 package hello.advanced.app.v3;
 
-import hello.advanced.trace.TraceStatus;
-import hello.advanced.trace.logtrace.LogTrace;
+import hello.advanced.app.common.TraceStatus;
+import hello.advanced.app.common.LogTrace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +21,7 @@ public class OrderControllerV3 {
             status = trace.begin("OrderController.request()");
             orderService.orderItem(itemId);
             trace.end(status);
-            return "ok";
+            return "ok (version 3)";
         } catch (Exception e) {
             trace.exception(status, e);
             throw e;

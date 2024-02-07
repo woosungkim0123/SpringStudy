@@ -1,7 +1,7 @@
 package hello.advanced.app.v1;
 
-import hello.advanced.trace.TraceStatus;
-import hello.advanced.trace.hellotrace.HelloTraceV1;
+import hello.advanced.app.common.TraceStatus;
+import hello.advanced.app.v1.trace.TraceV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class OrderServiceV1 {
 
     private final OrderRepositoryV1 orderRepository;
-    private final HelloTraceV1 trace;
+    private final TraceV1 trace;
 
     public void orderItem(String itemId) {
         TraceStatus status = null;
@@ -22,7 +22,5 @@ public class OrderServiceV1 {
             trace.exception(status, e);
             throw e;
         }
-
     }
-
 }

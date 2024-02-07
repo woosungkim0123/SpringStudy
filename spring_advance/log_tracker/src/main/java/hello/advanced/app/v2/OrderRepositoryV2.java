@@ -1,8 +1,8 @@
 package hello.advanced.app.v2;
 
-import hello.advanced.trace.TraceId;
-import hello.advanced.trace.TraceStatus;
-import hello.advanced.trace.hellotrace.HelloTraceV2;
+import hello.advanced.app.common.TraceId;
+import hello.advanced.app.common.TraceStatus;
+import hello.advanced.app.v2.trace.TraceV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class OrderRepositoryV2 {
 
-    private final HelloTraceV2 trace;
+    private final TraceV2 trace;
 
     public void save(TraceId traceId, String itemId) {
 
@@ -29,8 +29,6 @@ public class OrderRepositoryV2 {
             trace.exception(status, e);
             throw e;
         }
-
-
     }
 
     void sleep(int millis) {
