@@ -1,17 +1,21 @@
 package hello.advanced.app.v3;
 
-import hello.advanced.app.common.TraceStatus;
 import hello.advanced.app.common.LogTrace;
-import lombok.RequiredArgsConstructor;
+import hello.advanced.app.common.TraceStatus;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
 public class OrderControllerV3 {
 
     private final OrderServiceV3 orderService;
     private final LogTrace trace;
+
+    public OrderControllerV3(OrderServiceV3 orderService, @Qualifier("traceV3") LogTrace trace) {
+        this.orderService = orderService;
+        this.trace = trace;
+    }
 
     @GetMapping("/v3/request")
     public String request(String itemId) {

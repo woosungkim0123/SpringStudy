@@ -1,29 +1,37 @@
 package hello.advanced.app.v4;
 
-import hello.advanced.trace.TraceStatus;
-import hello.advanced.trace.logtrace.LogTrace;
-import hello.advanced.trace.template.AbstractTemplate;
-import lombok.RequiredArgsConstructor;
+import hello.advanced.app.common.TraceStatus;
+import hello.advanced.app.common.LogTrace;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@RequiredArgsConstructor
 public class OrderRepositoryV4 {
-
     private final LogTrace trace;
 
+    public OrderRepositoryV4(@Qualifier("threadLocalLogTrace") LogTrace trace) {
+        this.trace = trace;
+    }
+
     public void save(String itemId) {
-        AbstractTemplate<Void> template = new AbstractTemplate<>(trace) {
-            @Override
-            protected Void call() {
-                if(itemId.equals("ex")) {
-                    throw new IllegalStateException("예외발생");
-                }
-                sleep(1000);
-                return null;
+
+        TraceStatus status = null;
+        try {
+            status = trace.begin("OrderRepository.save(()");
+
+            if(itemId.equals("ex")) {
+                throw new IllegalStateException("예외발생");
             }
-        };
-        template.execute("OrderRepository.save(()");
+
+            sleep(1000);
+
+            trace.end(status);
+        } catch (Exception e) {
+            trace.exception(status, e);
+            throw e;
+        }
+
+
     }
 
     void sleep(int millis) {

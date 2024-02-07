@@ -1,15 +1,17 @@
 package hello.advanced.app.v3;
 
-import hello.advanced.app.common.TraceStatus;
 import hello.advanced.app.common.LogTrace;
-import lombok.RequiredArgsConstructor;
+import hello.advanced.app.common.TraceStatus;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@RequiredArgsConstructor
 public class OrderRepositoryV3 {
-
     private final LogTrace trace;
+
+    public OrderRepositoryV3(@Qualifier("traceV3") LogTrace trace) {
+        this.trace = trace;
+    }
 
     public void save(String itemId) {
 
@@ -22,14 +24,11 @@ public class OrderRepositoryV3 {
             }
 
             sleep(1000);
-
             trace.end(status);
         } catch (Exception e) {
             trace.exception(status, e);
             throw e;
         }
-
-
     }
 
     void sleep(int millis) {
