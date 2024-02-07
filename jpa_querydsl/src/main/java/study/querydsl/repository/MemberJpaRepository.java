@@ -12,7 +12,6 @@ import study.querydsl.dto.MemberTeamDto;
 import study.querydsl.dto.QMemberTeamDto;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.QMember;
-import study.querydsl.entity.QTeam;
 
 import java.util.List;
 import java.util.Optional;

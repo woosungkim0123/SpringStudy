@@ -1,8 +1,9 @@
 package hello.hellospring.repository;
 
 import hello.hellospring.domain.Member;
+import jakarta.persistence.EntityManager;
 
-import javax.persistence.EntityManager;
+
 import java.util.List;
 import java.util.Optional;
 

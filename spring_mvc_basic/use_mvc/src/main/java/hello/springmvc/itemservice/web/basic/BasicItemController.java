@@ -4,6 +4,7 @@ import hello.springmvc.itemservice.domain.item.DeliveryType;
 import hello.springmvc.itemservice.domain.item.Item;
 import hello.springmvc.itemservice.domain.item.ItemRepository;
 import hello.springmvc.itemservice.domain.item.ItemType;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -1,17 +1,18 @@
 package hello.hellospring.domain;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 // Entity => jpa가 관리하는 엔티티, pk 매핑(Id)
 // db가 알아서 id를 만들어주는 것 => identity 전략이라 부름
 @Entity
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // 만약 db에 칼럼이름이 username이면 @Column(name = "username")
