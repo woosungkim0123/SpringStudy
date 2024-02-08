@@ -1,26 +1,28 @@
 package hello.advanced.app.v5;
 
-import hello.advanced.trace.callback.TraceCallback;
-import hello.advanced.trace.callback.TraceTemplate;
-import hello.advanced.trace.logtrace.LogTrace;
-import hello.advanced.trace.template.AbstractTemplate;
+import hello.advanced.app.common.LogTrace;
+import hello.advanced.app.common.AbstractTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderServiceV5 {
-
     private final OrderRepositoryV5 orderRepository;
-    private final TraceTemplate template;
+    private final LogTrace trace;
 
-    public OrderServiceV5(OrderRepositoryV5 orderRepository, LogTrace logTrace) {
+    public OrderServiceV5(OrderRepositoryV5 orderRepository, @Qualifier("threadLocalLogTrace") LogTrace trace) {
         this.orderRepository = orderRepository;
-        this.template = new TraceTemplate(logTrace);
+        this.trace = trace;
     }
 
     public void orderItem(String itemId) {
-        template.execute("OrderService.orderItem()", () -> {
-            orderRepository.save(itemId);
-            return null;
-        });
+        AbstractTemplate<Void> template = new AbstractTemplate<>(trace) {
+            @Override
+            protected Void call() {
+                orderRepository.save(itemId);
+                return null;
+            }
+        };
+        template.execute("OrderService.orderItem()");
     }
 }

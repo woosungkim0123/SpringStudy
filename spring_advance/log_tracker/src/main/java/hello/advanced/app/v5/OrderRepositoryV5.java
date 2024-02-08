@@ -1,30 +1,30 @@
 package hello.advanced.app.v5;
 
-import hello.advanced.trace.callback.TraceCallback;
-import hello.advanced.trace.callback.TraceTemplate;
-import hello.advanced.trace.logtrace.LogTrace;
-import hello.advanced.trace.template.AbstractTemplate;
+import hello.advanced.app.common.LogTrace;
+import hello.advanced.app.common.AbstractTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderRepositoryV5 {
+    private final LogTrace trace;
 
-    private final TraceTemplate template;
-
-    public OrderRepositoryV5(LogTrace trace) {
-        this.template = new TraceTemplate(trace);
+    public OrderRepositoryV5(@Qualifier("threadLocalLogTrace") LogTrace trace) {
+        this.trace = trace;
     }
 
-
     public void save(String itemId) {
-
-        template.execute("OrderRepository.save(()", () -> {
-            if(itemId.equals("ex")) {
-                throw new IllegalStateException("예외발생");
+        AbstractTemplate<Void> template = new AbstractTemplate<>(trace) {
+            @Override
+            protected Void call() {
+                if(itemId.equals("ex")) {
+                    throw new IllegalStateException("예외발생");
+                }
+                sleep(1000);
+                return null;
             }
-            sleep(1000);
-            return null;
-        });
+        };
+        template.execute("OrderRepository.save(()");
     }
 
     void sleep(int millis) {

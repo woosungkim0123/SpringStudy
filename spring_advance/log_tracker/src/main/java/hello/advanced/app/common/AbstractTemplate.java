@@ -1,7 +1,4 @@
-package hello.advanced.trace.template;
-
-import hello.advanced.trace.TraceStatus;
-import hello.advanced.trace.logtrace.LogTrace;
+package hello.advanced.app.common;
 
 public abstract class AbstractTemplate<T> {
 
@@ -10,6 +7,7 @@ public abstract class AbstractTemplate<T> {
     protected AbstractTemplate(LogTrace trace) {
         this.trace = trace;
     }
+
     public T execute(String message) {
         TraceStatus status = null;
 
@@ -20,7 +18,6 @@ public abstract class AbstractTemplate<T> {
 
             trace.end(status);
             return result;
-
         } catch (Exception e) {
             trace.exception(status, e);
             throw e;
@@ -28,5 +25,4 @@ public abstract class AbstractTemplate<T> {
     }
 
     protected abstract T call();
-
 }
