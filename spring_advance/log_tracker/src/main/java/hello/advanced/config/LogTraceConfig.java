@@ -2,7 +2,7 @@ package hello.advanced.config;
 
 import hello.advanced.app.common.LogTrace;
 import hello.advanced.app.v3.trace.TraceV3;
-import hello.advanced.app.v4.trace.ThreadLocalLogTrace;
+import hello.advanced.app.common.ThreadLocalLogTrace;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

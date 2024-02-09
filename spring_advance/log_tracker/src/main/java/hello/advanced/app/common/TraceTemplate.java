@@ -1,7 +1,4 @@
-package hello.advanced.trace.callback;
-
-import hello.advanced.app.common.TraceStatus;
-import hello.advanced.app.common.LogTrace;
+package hello.advanced.app.common;
 
 public class TraceTemplate {
 
@@ -21,7 +18,6 @@ public class TraceTemplate {
 
             trace.end(status);
             return result;
-
         } catch (Exception e) {
             trace.exception(status, e);
             throw e;

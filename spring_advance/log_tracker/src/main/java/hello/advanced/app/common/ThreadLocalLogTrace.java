@@ -1,4 +1,4 @@
-package hello.advanced.app.v4.trace;
+package hello.advanced.app.common;
 
 import hello.advanced.app.common.LogTrace;
 import hello.advanced.app.common.TraceId;
@@ -35,11 +35,11 @@ public class ThreadLocalLogTrace implements LogTrace {
     public void end(TraceStatus status) {
         complete(status, null);
     }
+
     @Override
     public void exception(TraceStatus status, Exception e) {
         complete(status, e);
     }
-
 
     private void complete(TraceStatus status, Exception e) {
         Long stopTimeMs = System.currentTimeMillis();
