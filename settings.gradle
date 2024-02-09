@@ -44,6 +44,9 @@ project(':transaction').projectDir = new File('spring_jdbc_advance/transaction')
 // SPRING_06_ADVANCED
 include "log_tracker"
 project(':log_tracker').projectDir = new File('spring_advance/log_tracker')
+include "proxy"
+project(':proxy').projectDir = new File('spring_advance/proxy')
+
 
 // JPA_01_BASIC
 include "jpa_book"
