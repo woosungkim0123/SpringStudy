@@ -10,15 +10,51 @@
 
 ## 버전별 프록시 적용
 
-### V1
+- 모든 요구사항에 맞게 로그 추적기를 적용해보겠습니다.
 
-**기본 클래스 의존 관계**
+### V1 인터페이스 기반 환경에 프록시 적용
+
+**기본**
 
 ![v1 클래스 의존관계](image/v1_class_relation.png)
 
-**런타임 객체 의존 관게**
-
 ![v1 런타임 객체 의존관계](image/v1_runtime_realation.png)
+
+**로그 추적기용 프록시 추가**
+
+![v1 클래스 의존관계](image/v1_class_relation_proxy.png)
+
+![v1 런타임 객체 의존관계](image/v1_runtime_realation_proxy.png)
+
+**방법**
+
+1. 각 레이어의 인터페이스를 구현한 프록시를 추가합니다. (e.g. OrderControllerV1 인터페이스를 바탕으로 OrderControllerV1Proxy 추가)
+2. 빈 설정 파일에서 실제 객체를 반환하지 않고 프록시를 반환하도록 변경합니다. (프록시를 실제 스프링 빈 대신 등록하고 실제 객체는 스프링 빈으로 등록하지 않는다.)
+   ```java
+   @Configuration
+   public class AppV1Config {
+       @Bean
+       public OrderControllerV1 orderController(LogTrace logTrace) {
+           OrderControllerV1Impl controllerImpl = new OrderControllerV1Impl(orderService(logTrace));
+           return new OrderControllerInterfaceProxy(controllerImpl, logTrace); // 프록시가 등록
+       }
+       // ... 
+   }
+   ```
+
+실제 객체가 스프링 빈으로 등록되지 않는다고 해서 사라지는 것은 아니다. 
+
+프록시 객체가 실제 객체를 참조하기 때문에 프록시를 통해서 실제 객체를 호출할 수 있습니다. (프록시 안에 실제 객체가 있는 것)
+
+프록시 객체는 스프링 컨테이너가 관리하고 자바 힙 메모리에도 올라간다. 반면에 실제 객체는 자바 힙 메모리에는 올라가지만 스프링 컨테이너가 관리하지는 않는다.
+
+![스프링 컨테이너 프록시 적용](image/container_apply_proxy.png)
+
+### V2 구체 클래스 기반 환경에 프록시 적용
+
+
+
+
 
 
 ## 프록시 개념

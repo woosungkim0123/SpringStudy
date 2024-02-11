@@ -1,7 +1,5 @@
 package hello.proxy.app.v1;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 public class OrderControllerV1Impl implements OrderControllerV1 {
 
     private final OrderServiceV1 orderService;
