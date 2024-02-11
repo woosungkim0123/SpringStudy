@@ -28,8 +28,4 @@ public class AppV1Config {
         OrderRepositoryV1Impl repositoryImpl = new OrderRepositoryV1Impl();
         return new OrderRepositoryInterfaceProxy(repositoryImpl, logTrace); // 프록시 등록
     }
-
-
-
-
 }

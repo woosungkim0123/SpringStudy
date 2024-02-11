@@ -72,21 +72,107 @@
 
 자바가 기본 제공하는 JDK 동적 프록시나 CGLIB의 프록시 생성 오픈소스 기술을 활용하면 프록시 객체를 동적으로 런타임에 만들어낼 수 있습니다. (프록시를 적용할 코드를 하나만 만들어놓고 프록시 객체를 찍어낼 수 있습니다.)
 
-ps. JDK 동적 프록시를 이해하기 위해 사전 지식인 [리플렉션](#리플렉션)에 대해 먼저 알아야 합니다.
+- JDK 동적 프록시는 인터페이스 기반으로 프록시를 동적으로 만들어주기 때문에 인터페이스가 필수라서 V1에만 적용할 수 있습니다. (V1에만 적용, v2_dynamic_proxy)
+- 특정 클래스에는 적용되지 않도록 필터를 적용할 수 있습니다. (DynamicFilterConfig)
+- JDK 동적 프록시를 이해하기 위해 사전 지식인 [리플렉션](#리플렉션)에 대해 먼저 알아야 합니다.
+
+### 한계
+
+- JDK 동적 프록시는 인터페이스가 필수라 인터페이스가 없는 클래스에는 적용할 수 없습니다. (CGLIB이라는 바이트코드 조작 라이브러리 사용시 해결가능)
 
 ### 코드 예시
 
-JDK 동적 프록시는 인터페이스 기반으로 프록시를 동적으로 만들어주기 때문에 인터페이스가 필수 입니다.
+```java
+public interface AInterface {
+   String call();
+}
 
+@Slf4j
+public class AImpl implements AInterface {
+    @Override
+    public String call() {
+        log.info("AImpl.call() is called");
+        return "a";
+    }
+}
 
-### 동적 프록시 개념
+// A인터페이스와 구현체와 비슷한 B유형도 생성...
 
+/**
+ * JDK 동적 프록시에 적용할 로직은 InvocationHandler 인터페이스를 구현해서 작성하면 됩니다.
+ * - 동적 프록시가 없으면 A와 B에 대한 프록시를 각각 만들어야 합니다.
+ * - 이를 통해 동적 프록시에 적용할 공통 로직을 개발할 수 있습니다.
+ */
+@Slf4j
+public class TypeInvocationHandler implements InvocationHandler {
 
+   private final Object target;
 
+   public TypeInvocationHandler(Object target) {
+      this.target = target;
+   }
+    
+   // 파라미터: 프록시 객체, 호출한 메서드, 호출한 메서드의 파라미터
+   @Override
+   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+      log.info("TimeProxy 실행");
+      long startTime = System.currentTimeMillis();
 
+      Object result = method.invoke(target, args);
 
+      long endTime = System.currentTimeMillis();
+      long resultTime = endTime - startTime;
+      log.info("TimeProxy 종료 resultTime={}", resultTime);
+      return result;
+   }
+}
 
+@Slf4j
+public class JdkDynamicTest {
 
+    @Test
+    void dynamicA() {
+        AInterface target = new AImpl();
+        TypeInvocationHandler handler = new TypeInvocationHandler(target);
+        
+        AInterface proxy = (AInterface) Proxy.newProxyInstance(
+                AInterface.class.getClassLoader(), 
+                new Class[]{AInterface.class}, 
+                handler
+        );
+        
+        proxy.call();
+        log.info("targetClass={}", target.getClass()); // class hello.proxy.AImpl
+        log.info("proxyClass={}", proxy.getClass()); // class jdk.proxy3.$Proxy11, 우리가 만든 클래스가 아닌 동적 프록시가 동적으로 만든 프록시
+    }
+}
+```
+
+- 프록시를 만들 때 첫번째 인자는 AInterface 인터페이스를 로드하는 데 사용된 클래스 로더를 참조하여, 동적 프록시 클래스를 JVM에 로드할 때 동일한 방식을 사용하라는 의미입니다.
+- 사용된 클래스 로더는 ClassLoaders$AppClassLoader@4e25154 입니다.
+
+> **AppClassLoader(애플리케이션 클래스로더)** 
+> 
+> Java에서 애플리케이션 클래스 로더(Application Class Loader)를 사용한다는 것은, 애플리케이션에서 정의한 클래스와 자바 API 클래스 외의 클래스를 로드할 때 사용되는 기본 클래스 로더를 의미합니다.  
+> Java의 클래스 로더 계층 구조에서 애플리케이션 클래스 로더는 시스템 클래스 로더(System Class Loader) 바로 아래에 위치하며, 사용자가 정의한 클래스들을 로드하는 주된 클래스 로더입니다.
+
+- 두번째 인자는 어떤 인터페이스를 기반으로 프록시를 만들지, 세번째 인자는 프록시에 사용되는 로직입니다.
+
+### 정리
+
+JDK 동적 프록시 덕분에 적용 대상 만큼 프록시 객체를 만들지 않아도 됩니다. 그리고 같은 부가 기능 로직을 한번만 개발하면 공통으로 적용할 수 있습니다.
+
+**실행 순서**
+
+![동적 프록시 실행 순서](image/dynamic_proxy_running_order.png)
+
+**JDK 동적 프록시 도입 전**
+
+![동적 프록시 도입 전](image/dynamic_proxy_apply_before.png)
+
+**JDK 동적 프록시 도입 후**
+
+![img_2.png](image/dynamic_proxy_apply_after.png)
 
 
 
