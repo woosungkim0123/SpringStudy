@@ -6,7 +6,20 @@
 - 특정 메서드는 로그를 출력하지 않도록 해야합니다.
 - 인터페이스가 있는 구현 클래스, 인터페이스가 없는 구체 클래스, 컴포넌트 스캔 대상 등 다양한 케이스에 다 적용할 수 있어야합니다.
 
-=> 이 문제를 해결하려면 프록시(Proxy) 개념을 먼저 이해해야합니다.
+이 문제를 해결하려면 프록시(Proxy) 개념을 먼저 이해해야합니다. 프록시에 대한 자세한 이해는 [프록시 개념](#프록시-개념)를 참고해주세요.
+
+## 버전별 프록시 적용
+
+### V1
+
+**기본 클래스 의존 관계**
+
+![v1 클래스 의존관계](image/v1_class_relation.png)
+
+**런타임 객체 의존 관게**
+
+![v1 런타임 객체 의존관계](image/v1_runtime_realation.png)
+
 
 ## 프록시 개념
 
@@ -58,6 +71,9 @@
 - 코드를 변경없이 프록시를 도입해서 접근 제어를 하는 패턴입니다.
 - 프록시 패턴은 프록시를 사용하는 여러 패턴 중 하나일 뿐 입니다.
 - 클라이언트는 프록시 객체가 주입되었는지 실제 객체가 주입되었는지 모릅니다.
+- 다른 개체에 대한 접근을 제어하기 위해 대리자를 제공합니다.
+
+![프록시 패턴](image/proxy_pattern.png)
 
 ### 프록시 패턴 적용 전
 
@@ -158,6 +174,128 @@ public class ProxyPatternTest {
         client.execute(); // 캐시가 없어서 realSubject.operation() 호출 -> 캐시 저장 (1초)
         client.execute(); // 캐시가 있어서 realSubject.operation() 호출하지 않고 캐시 반환 (0초)
         client.execute(); // 캐시가 있어서 realSubject.operation() 호출하지 않고 캐시 반환 (0초)
+    }
+}
+```
+
+## 데코레이터 패턴
+
+- 코드를 변경하지 않고 프록시를 도입해서 부가 기능을 추가하는 패턴입니다.
+- 실제 객체가 있고 이를 데코레이터로 감싸서 부가 기능을 추가합니다.
+- 객체에 추가 책임(기능)을 동적으로 추가하고 기능 확장을 위한 유연한 대안을 제공합니다.
+
+![데코레이터 패턴](image/decorate.png)
+
+### 사용 목적
+
+기존 코드를 변경하지 않고도 객체의 기능을 확장할 수 있어, 기능 추가와 관련된 복잡성과 클래스 수의 증가 문제를 해결할 수 있습니다.
+
+### 코드
+
+**기본 기능**
+
+```java
+public interface Component {
+    String operation();
+}
+
+@Slf4j
+public class RealComponent implements Component {
+   @Override
+   public String operation() {
+      log.info("RealComponent 실행");
+      return "data";
+   }
+}
+
+@Slf4j
+public class DecoratorClient {
+
+   private Component component;
+
+   public DecoratorClient(Component component) {
+      this.component = component;
+   }
+
+   public String execute() {
+      log.info("DecoratorClient 실행");
+      return component.operation();
+   }
+}
+
+public class DecoratorPatternTest {
+    @Test
+    public void noDecoratorPatternTest() {
+        Component component = new RealComponent();
+        DecoratorClient client = new DecoratorClient(component);
+
+        client.execute();
+    }
+}
+```
+
+**코드 변경없이 기능 추가**
+
+```java
+public abstract class Decorator implements Component {
+    protected Component component;
+
+    public Decorator(Component component) {
+        this.component = component;
+    }
+}
+
+public class MessageDecorator extends Decorator {
+
+   public MessageDecorator(Component component) {
+      super(component);
+   }
+
+   @Override
+   public String operation() {
+      log.info("MessageDecorator 실행");
+
+      String result = component.operation();
+      String decoResult = "****" + result + "****";
+
+      log.info("적용전 : {}, 적용후 : {}", result, decoResult);
+
+      return decoResult;
+   }
+}
+
+@Slf4j
+public class TimeDecorator extends Decorator {
+
+   public MessageDecorator(Component component) {
+      super(component);
+   }
+
+   @Override
+   public String operation() {
+      log.info("TimeDecorator 실행");
+      long start = System.currentTimeMillis();
+
+      String result = component.operation();
+
+      long end = System.currentTimeMillis();
+      log.info("실행시간 : {}", end - start);
+
+      return result;
+   }
+}
+
+public class DecoratorPatternTest {
+    @Test
+    public void decoratorPatternTest2() {
+        Component component = new RealComponent();
+        Component messageDecorator = new MessageDecorator(component);
+        Component timeDecorator = new TimeDecorator(messageDecorator);
+        DecoratorClient client = new DecoratorClient(timeDecorator); // Client 코드를 전혀 수정하지 않음
+       
+        String result = client.execute();
+        
+        System.out.println(result);
     }
 }
 ```
