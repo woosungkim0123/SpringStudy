@@ -380,6 +380,230 @@ public class ProxyFactoryTest {
 }
 ```
 
+## 포인트컷, 어드바이스, 어드바이저
+
+### 포인트컷 (Pointcut)
+
+- 어디에 부가 기능을 적용할지, 안할지를 판단하는 필터링 역할입니다.
+- 주로 클래스와 메소드 이름으로 필터링을 합니다.
+- 어떤 포인트(Point)에 기능을 적용할지 안할지 잘라서(cut) 구분하는 것입니다.
+
+### 어드바이스(Advice)
+
+- 프록시가 호출하는 부가 기능을 말합니다. 단순하게 프록시 로직이라고 생각하면 됩니다.
+
+### 어드바이저(Advisor)
+
+- 하나의 포인트컷과 하나의 어드바이스를 합친 것을 말합니다.
+
+![포인트컷, 어드바이스, 어드바이저](image/pointcut_advice_advisor.png)
+
+![어드바이저](image/proxy_advisor.png)
+
+### 코드 예시
+
+**기본적인 어드바이저 사용**
+
+- DefaultPointcutAdvisor는 Advisor 인터페이스의 가장 일반적인 구현체입니다. (하나의 포인트컷과 하나의 어드바이스를 가지고 있습니다.)
+- Advisor는 내부에 포인트컷과 어드바이스를 모두 가지고 있습니다. 어떤 부가 기능을 적용할지 어디에 적용할지 알 수 있습니다. (프록시 팩토리를 사용할 때 어드바이저는 필수입니다.)
+- 이전 proxyFactory.addAdvice(new TimeAdvice())를 사용할 떄도 내부적으로 지금과 같은 방식으로 어드바이저가 추가됩니다.
+
+```java
+@Slf4j
+public class AdvisorTest {
+
+    @Test
+    void advisorTest() {
+        ServiceInterface target = new Service();
+        ProxyFactory proxyFactory = new ProxyFactory(target);
+        DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor(
+                Pointcut.TRUE, // 항상 true 를 반환하는 포인트컷이다
+                new TimeAdvice() // Advisor 인터페이스의 가장 일반적인 구현체이다.
+        );
+        proxyFactory.addAdvisor(advisor); // 프록시 팩토리에 적용할 어드바이저를 지정합니다.
+
+        ServiceInterface proxy = (ServiceInterface) proxyFactory.getProxy();
+        proxy.save();
+        proxy.find();
+    }
+}
+```
+
+**필터링 적용 (포인트 컷 직접 구현)**
+
+- 기존에는 필터링을 Advice에 if문으로 구현했지만 단일 책임 원칙에 따라서 분리하는 것이 좋습니다.
+- 포인트 컷은 크게 ClassFilter 와 MethodMatcher 둘로 이루어집니다.
+- ClassFilter는 어떤 클래스에 적용할지, MethodMatcher는 어떤 메서드에 적용할지를 결정합니다. (둘다 true를 반환해야 어드바이스가 적용됩니다.)
+- 일반적으로 스프링이 구현해놓은 포인트 컷을 사용하면 되지만 여기서는 직접 구현해보겠습니다.
+
+```java
+class MyPointcut implements Pointcut {
+    @Override
+    public ClassFilter getClassFilter() {
+        return ClassFilter.TRUE;
+    }
+
+    @Override
+    public MethodMatcher getMethodMatcher() {
+        return new MyMethodMatcher();
+    }
+}
+```
+
+- save 메서드에만 어드바이스를 적용하겠습니다.
+- isRuntime은 값이 true면 matches(... args) 메서드가 대신 호출됩니다. (동적으로 넘어오는 매개변수를 판단 로직으로 사용할 수 있습니다.)
+- isRuntime 값이 false면 클래스의 정적 정보만 사용하기 때문에 스프링이 내부에서 캐싱을 통해 성능 향상이 가능합니다.
+- isRuntime 값이 true면 매개변수가 동적으로 변경된다고 가정하기 때문에 캐싱을 하지 않습니다.
+
+```java
+class MyMethodMatcher implements MethodMatcher {
+    private String matchName = "save";
+
+    @Override
+    public boolean matches(Method method, Class<?> targetClass) {
+        boolean result = method.getName().equals(matchName);
+        log.info("포인트컷 호출 method={}, targetClass={}", method.getName(), targetClass);
+        log.info("포인트컷 결과 result={}", result);
+        return result;
+    }
+
+    @Override
+    public boolean isRuntime() {
+        return false;
+    }
+    
+    // isRuntime이 true일 때 호출
+    @Override
+    public boolean matches(Method method, Class<?> targetClass, Object... args) {
+        return false;
+    }
+}
+```
+
+```java
+@Slf4j
+public class AdvisorTest {
+    @Test
+    void advisorTest2() {
+        ServiceInterface target = new Service();
+        ProxyFactory proxyFactory = new ProxyFactory(target);
+        DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor(
+                new MyPointcut(), // 직접 구현한 포인트컷을 사용
+                new TimeAdvice()
+        );
+        proxyFactory.addAdvisor(advisor);
+
+        ServiceInterface proxy = (ServiceInterface) proxyFactory.getProxy();
+
+        proxy.save(); // 어드바이스가 적용된다.
+        proxy.find(); // 어드바이스가 적용되지 않는다.
+    }
+}
+```
+
+![포인트컷이 적용되지 않은 경우](image/not_apply_pointcut.png)
+
+**필터링 적용 (스프링이 제공하는 포인트컷 `NameMatchMethodPointcut` 사용)**
+
+- 스프링은 무수히 많은 포인트 컷을 제공합니다.
+  - NameMatchMethodPointcut: 메서드 이름 기반으로 매칭 (내부적으로 PatternMatchUtils 사용)
+  - JdkRegexpMethodPointcut: JDK 정규 표현식 기반으로 매칭
+  - TruePointcut: 항상 true를 반환하는 포인트컷
+  - AnnotationMatchingPointcut: 어노테이션 기반으로 매칭
+  - AspectJExpressionPointcut: AspectJ 표현식 기반으로 매칭 (가장 중요)
+
+```java
+@Slf4j
+public class AdvisorTest {
+    @Test
+    void advisorTest3() {
+        ServiceInterface target = new Service();
+        ProxyFactory proxyFactory = new ProxyFactory(target);
+        
+        NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut(); // 메서드 이름 기반으로 매칭
+        pointcut.setMappedNames("save"); 
+        
+        DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor(
+                pointcut,
+                new TimeAdvice()
+        );
+        proxyFactory.addAdvisor(advisor);
+        ServiceInterface proxy = (ServiceInterface) proxyFactory.getProxy();
+        
+        proxy.save(); // 어드바이스가 적용된다.
+        proxy.find(); // 어드바이스가 적용되지 않는다.
+    }
+}
+```
+
+**여러 어드바이저를 하나의 타겟에 적용**
+
+- 여러 프록시를 사용하는 방법이 있는데 적용해야 하는 어드바이저가 10개라면 10개의 프록시를 만들어야 합니다.
+
+![여러 프록시 사용](image/use_multi_proxy_advisor.png)
+
+```java
+//client -> proxy2(advisor2) -> proxy1(advisor1) -> target
+public class MultiAdvisorTest {
+    @Test
+    void multiAdvisorTest1() {
+        //프록시1 생성
+        ServiceInterface target = new ServiceImpl();
+        ProxyFactory proxyFactory1 = new ProxyFactory(target);
+        DefaultPointcutAdvisor advisor1 = new
+                DefaultPointcutAdvisor(Pointcut.TRUE, new Advice1()); // 어드바이저 1
+        proxyFactory1.addAdvisor(advisor1);
+        ServiceInterface proxy1 = (ServiceInterface) proxyFactory1.getProxy();
+        
+        //프록시2 생성, target -> proxy1 입력
+        ProxyFactory proxyFactory2 = new ProxyFactory(proxy1);
+        DefaultPointcutAdvisor advisor2 = new
+                DefaultPointcutAdvisor(Pointcut.TRUE, new Advice2()); // 어드바이저 2
+        proxyFactory2.addAdvisor(advisor2);
+        ServiceInterface proxy2 = (ServiceInterface) proxyFactory2.getProxy();
+        
+        //실행
+        proxy2.save();
+    }
+}
+```
+
+- 스프링은 이러한 문제를 해결하기 위해 하나의 프록시에 여러 어드바이저를 적용할 수 있게 해줍니다.
+
+**프록시 팩토리 - 여러 어드바이저를 적용**
+
+![프록시 팩토리 - 여러 어드바이저를 적용](image/multi_advisor_proxy_factory.png)
+
+```java
+// proxy -> advisor2 -> advisor1 -> target
+public class MultiAdvisorTest {
+    @Test
+    void multiAdvisorTest2() {
+        DefaultPointcutAdvisor advisor2 = new DefaultPointcutAdvisor(Pointcut.TRUE, new Advice2());
+        DefaultPointcutAdvisor advisor1 = new DefaultPointcutAdvisor(Pointcut.TRUE, new Advice1());
+
+        // 프록시는 하나만 생성
+        ServiceInterface target = new Service();
+        ProxyFactory proxyFactory = new ProxyFactory(target);
+        proxyFactory.addAdvisor(advisor2); // 순서 주의
+        proxyFactory.addAdvisor(advisor1);
+        ServiceInterface proxy = (ServiceInterface) proxyFactory.getProxy();
+
+        // 실행
+        proxy.save();
+    }
+}
+```
+
+
+### 주의 사항
+
+스프링은 AOP를 적용할 때 최적화를 진행해서 지금처럼 프록시는 하나만 만들고 하나의 프록시에 여러 어드바이저를 적용합니다. (자주 헷갈리는 부분)
+
+즉, 하나의 타겟에 여러 AOP가 동시에 적용되어도, 스프링 AOP는 타겟마다 하나의 프록시만 생성합니다.
+
+<br>
+<br>
 
 ## 프록시 개념
 
