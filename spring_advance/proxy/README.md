@@ -256,9 +256,129 @@ public class CglibTest {
 인터페이스가 있으면 JDK 동적 프록시를 사용하고 인터페이스가 없으면 CGLIB을 사용하는 방식이 스프링의 ProxyFactory가 사용하는 방식입니다.
 
 
+## ProxyFactory
 
+- 인터페이스가 있는 경우 JDK 동적 프록시를 사용하고 인터페이스가 없는 경우 CGLIB을 사용하는 방식입니다. (이런 설정도 변경 가능)
 
+   ![프록시 팩토리](image/proxy_factory.png)
 
+- JDK 동적프록시가 제공하는 InvocationHandler와 CGLIB이 제공하는 MethodInterceptor가 Advice를 호출하게 해서 사용자는 Advice만 만들면 됩니다.
+
+   ![프록시 팩토리 어드바이스](image/proxy_factory_advice.png)
+
+![프록시 팩토리 어드바이스 전체 흐름](image/proxy_factory_advice_all.png)
+
+### 코드 예시
+
+**Advice**
+
+- Advice는 프록시에 적용하는 부가 기능 로직 입니다.
+- JDK 동적 프록시의 InvocationHandler와 CGLIB의 MethodInterceptor가 Advice를 호출하게 해서 사용자는 Advice만 만들면 됩니다.
+- 다른 proxy 사용과 달리 실제 객체(target)을 안 넣어줘도 됩니다. (이미 프록시 팩토리를 만들 때 MethodInvocation invocation 안에 모두 포함되어 있습니다.)
+- MethodInterceptor 내부에는 다음 메서드를 호출하는 방법, 현재 프록시 객체 인스턴스, args, 메서드 정보등이 포함되어 있습니다. (기존 파라미터들이 안으로 들어옴)
+- 상속받은 부모의 부모가 Advice 인터페이스 입니다. (MethodInterceptor -> Interceptor -> Advice)
+- MethodInterceptor는 스프링 AOP 모듈(org.aopalliance.intercept)을 사용해야합니다. (CGLIB MethodInterceptor와 다르니 주의)
+
+```java
+@Slf4j
+public class TimeAdvice implements MethodInterceptor {
+    
+    @Override
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        log.info("TimeProxy 실행");
+        long startTime = System.currentTimeMillis();
+
+        Object result = invocation.proceed();
+
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("TimeProxy 종료 resultTime={}ms", resultTime);
+        return result;
+    }
+}
+```
+
+**인터페이스 기반 프록시 팩토리**
+
+```java
+@Slf4j
+public class ProxyFactoryTest {
+    
+    @Test
+    public void interfaceTest() {
+        ServiceInterface target = new Service();
+        ProxyFactory proxyFactory = new ProxyFactory(target); // 이때 프록시 팩토리에 타겟 정보를 넣음 - Advice에서 넣어줄 필요가 없습니다.
+        proxyFactory.addAdvice(new TimeAdvice()); // Advice를 추가해준다.
+        ServiceInterface proxy = (ServiceInterface) proxyFactory.getProxy();
+
+        log.info("target = {}", target.getClass()); // class hello.proxy.Service
+        log.info("proxy = {}", proxy.getClass()); // class jdk.proxy3.$Proxy11
+
+        proxy.save();
+
+        // 프록시가 적용되었나 확인 (프록시 팩토리를 사용할 때만 가능, 다른 방법으로 프록시를 만들면 확인 불가)
+        assertThat(AopUtils.isAopProxy(proxy)).isTrue();
+        assertThat(AopUtils.isJdkDynamicProxy(proxy)).isTrue();
+        assertThat(AopUtils.isCglibProxy(proxy)).isFalse();
+    }
+}
+```
+
+**구체 클래스 기반 프록시 팩토리**
+
+```java
+@Slf4j
+public class ProxyFactoryTest {
+
+    @Test
+    public void lassTest() {
+        ConcreteService target = new ConcreteService();
+        ProxyFactory proxyFactory = new ProxyFactory(target);
+        proxyFactory.addAdvice(new TimeAdvice());
+        ConcreteService proxy = (ConcreteService) proxyFactory.getProxy();
+
+        log.info("target = {}", target.getClass()); // class hello.proxy.ConcreteService
+        log.info("proxy = {}", proxy.getClass()); // class hello.proxy.ConcreteService$$SpringCGLIB$$
+
+        proxy.call();
+        
+        assertThat(AopUtils.isAopProxy(proxy)).isTrue();
+        assertThat(AopUtils.isJdkDynamicProxy(proxy)).isFalse();
+        assertThat(AopUtils.isCglibProxy(proxy)).isTrue();
+    }
+}
+```
+
+**ProxyTargetClass 옵션을 사용하여 강제로 CGLIB을 사용하도록 변경**
+
+- ProxyTargetClass 옵션을 사용하면 인터페이스가 있어도 강제로 CGLIB 프록시를 사용하게 할 수 있습니다.
+- 예시에서는 Service를 상속받아서 CGLIB으로 프록시를 만들게 됩니다.
+
+```java
+@Slf4j
+public class ProxyFactoryTest {
+    
+    @Test
+    public void proxyTargetClass() {
+        ServiceInterface target = new Service();
+        ProxyFactory proxyFactory = new ProxyFactory(target);
+
+        proxyFactory.setProxyTargetClass(true); // 강제로 CGLIB 프록시를 사용하게 한다.
+
+        proxyFactory.addAdvice(new TimeAdvice());
+        ServiceInterface proxy = (ServiceInterface) proxyFactory.getProxy();
+
+        log.info("target = {}", target.getClass()); // class hello.proxy.Service
+        log.info("proxy = {}", proxy.getClass()); // class hello.proxy.Service$$SpringCGLIB$$0
+
+        proxy.save();
+        
+        assertThat(AopUtils.isAopProxy(proxy)).isTrue();
+        assertThat(AopUtils.isJdkDynamicProxy(proxy)).isFalse();
+        assertThat(AopUtils.isCglibProxy(proxy)).isTrue();
+    }
+}
+```
 
 
 ## 프록시 개념
