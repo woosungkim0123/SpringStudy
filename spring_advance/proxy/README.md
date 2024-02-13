@@ -613,9 +613,115 @@ V3처럼 컴포넌트 스캔을 사용하는 경우 지금의 방식으로는 �
 
 이러한 문제를 한번에 해결하는 것이 빈 후처리기 입니다.
 
+<br>
+<br>
 
+## 빈 후처리기
 
+- Bean을 빈 저장소에 등록하기 직전에 조작하고 싶다면 빈 후처리기를 사용할 수 있습니다. (`BeanPostProcessor`)
+- 빈 후처리기를 사용해 V3 컴포넌트 스캔에 프록시를 적용할 수 있고 설정 코드를 줄일 수 있습니다.
 
+### 과정
+
+1. 빈 대상이 되는 객체를 생성합니다.(`@Bean`, 컴포넌트 스캔)
+2. 생성된 객체를 빈 후처리기에 전달합니다.
+3. 빈 후처리기에서 스프링 빈 객체를 조작하거나 다른 객체로 바꿔치기 할 수 있습니다.
+4. 빈 후처리기가 빈을 그대로 반환하면 해당 빈이 등록되고 바꿔치기 하면 다른 객체가 빈 저장소에 등록됩니다.
+
+![빈 후처리기 절차](image/bean_post_processor_process.png)
+
+### 코드
+
+**빈 후처리기를 사용X**
+
+```java
+public class BasicTest {
+
+    // 스프링 컨테이너에는 A빈만 등록된 상태
+    @Test
+    void basicConfig() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(BasicConfig.class); // 스프링 컨테이너
+        A beanA = context.getBean("beanA", A.class);
+        beanA.helloA();
+
+        // B는 빈으로 등록되지 않는다.
+        assertThatThrownBy(() -> context.getBean("beanB", B.class))
+                    .isInstanceOf(NoSuchBeanDefinitionException.class); // true
+    }
+}
+```
+
+**빈 후처리기 사용**
+
+빈 객체 생성 이후에 오출되는 BeanPostProcessor 인터페이스의 메소드입니다.
+
+- postProcessBeforeInitialization : 객체 생성 이후에 @PostConstruct 같은 초기화가 발생하기 전에 호출되는 포스트 프로세서이다.
+- postProcessAfterInitialization : 객체 생성 이후에 @PostConstruct 같은 초기화가 발생한 다음에 호출되는 포스트 프로세서이다.
+
+```java
+@Configuration
+class BeanPostProcessorConfig {
+    @Bean(name ="beanA")
+    public A a() {
+        return new A();
+    }
+    // 후처리기를 빈으로 등록하면 인식하고 동작합니다.
+    @Bean
+    public AToBPostProcess helloBeanPostProcessor() {
+        return new AToBPostProcess();
+    }
+}
+
+// 빈 후처리기
+@Slf4j
+class AToBPostProcess implements BeanPostProcessor {
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
+        log.info("bean={}, beanName={}", bean, beanName);
+        if (bean instanceof A) {
+            return new B(); // A를 B로 대체
+        }
+        return bean;
+    }
+}
+
+public class BasicTest {
+    @Test
+    void postProcessor() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(BeanPostProcessorConfig.class);
+        B b = context.getBean("beanA", B.class); // A가 B로 대체되어 등록된다.
+        b.helloB();
+        
+        assertThatThrownBy(() -> context.getBean(A.class))
+                .isInstanceOf(NoSuchBeanDefinitionException.class); // true
+    }
+}
+```
+
+### 정리
+
+- 빈 후처리기는 빈을 조작하고 변경 할 수 있는 후킹 포인트 입니다.
+- 인터페이스인 BeanPostProcessor를 구현하고 스프링 빈으로 등록하면 스프링 컨테이너가 빈 후처리기로 인식하고 동작합니다.
+- 빈 후처리기를 등록하면 스프링 컨텍스트에 등록되는 모든 빈의 생성과 초기화 과정에서 해당 후처리기를 거치게 됩니다.
+- 일반적으로는 컴포넌트 스캔으로 등록하는 빈들은 중간에 조작할 방법이 없는데 빈 후처리기를 사용하면 조작할 수 있습니다. (프록시로 교체도 가능)
+- @PostConstruct는 스프링 빈 생성 이후에 빈 초기화 역할을 하는데 내부를 보면 CommonAnnotationBeanPostProcessor이라는 빈 후처리기가 등록되어 있고 이 처리기가 @PostConstruct 애노테이션이 붙은 메서드를 호출하는 것을 볼 수 있습니다.
+
+![빈 후처리기 프록시 등록](image/bean_processor_proxy.png)
+
+### 개선
+
+빈 후처리기에서 프록시를 적용할지 여부를 판단했지만 이 방식보다 포인트컷을 사용하는 것이 더 좋습니다.
+
+포인트 컷은 이미 클래스, 메서드 단위의 필터 기능을 가지고 있기 때문에 프록시 적용 대상 여부를 정밀하게 설정할 수 있습니다. (어드바이저를 통해 포인트 컷 확인가능)
+
+**포인트컷 두가지 사용용도**
+
+1. 프록시 적용 대상 여부를 체크해서 필요한 곳에만 프록시 적용 (빈 후처리기 - 자동 프록시 생성)
+    - 객체 안에 메서드가 10개인데 하나도 어드바이스를 적용할 필요가 없으면 프록시로 만들 필요가 없습니다.
+    - 이런 것을 포인트컷으로 판단하여 결정합니다. (1번 포인트컷)
+2. 프록시의 어떤 메서드가 호출 되었을 때 어드바이스를 적용할 지 판단 (프록시 내부)
+    - 객체 안에 메서드가 10개인데 그 중 한개를 어드바이스를 적용해야 한다면 일단 프록시를 만듭니다.(객체 단위로 되기 때문) 
+    - 어떤 메서드에 어드바이스를 적용할지는 포인트컷이 결정합니다. (2번 포인트컷)
 
 
 
