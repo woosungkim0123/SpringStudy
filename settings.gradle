@@ -46,7 +46,8 @@ include "log_tracker"
 project(':log_tracker').projectDir = new File('spring_advance/log_tracker')
 include "proxy"
 project(':proxy').projectDir = new File('spring_advance/proxy')
-
+include "aop"
+project(':aop').projectDir = new File('spring_advance/aop')
 
 // JPA_01_BASIC
 include "jpa_book"
