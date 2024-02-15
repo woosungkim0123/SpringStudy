@@ -3,10 +3,6 @@ package hello.proxy.config;
 import hello.proxy.app.v2.OrderControllerV2;
 import hello.proxy.app.v2.OrderRepositoryV2;
 import hello.proxy.app.v2.OrderServiceV2;
-import hello.proxy.config.v1_proxy.concrete_proxy.OrderControllerConcreteProxy;
-import hello.proxy.config.v1_proxy.concrete_proxy.OrderRepositoryConcreteProxy;
-import hello.proxy.config.v1_proxy.concrete_proxy.OrderServiceConcreteProxy;
-import hello.proxy.trace.LogTrace;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,20 +10,18 @@ import org.springframework.context.annotation.Configuration;
 public class AppV2Config {
 
     @Bean
-    public OrderRepositoryV2 orderRepositoryV2(LogTrace logTrace) {
-        OrderRepositoryV2 repositoryImpl = new OrderRepositoryV2();
-        return new OrderRepositoryConcreteProxy(repositoryImpl, logTrace);
+    public OrderControllerV2 orderControllerV2() {
+        return new OrderControllerV2(orderServiceV2());
     }
 
     @Bean
-    public OrderServiceV2 orderServiceV2(LogTrace logTrace) {
-        OrderServiceV2 serviceImpl = new OrderServiceV2(orderRepositoryV2(logTrace));
-        return new OrderServiceConcreteProxy(serviceImpl, logTrace);
+    public OrderServiceV2 orderServiceV2() {
+        return new OrderServiceV2(orderRepositoryV2());
     }
 
     @Bean
-    public OrderControllerV2 orderControllerV2(LogTrace logTrace) {
-        OrderControllerV2 controllerImpl = new OrderControllerV2(orderServiceV2(logTrace));
-        return new OrderControllerConcreteProxy(controllerImpl, logTrace);
+    public OrderRepositoryV2 orderRepositoryV2() {
+        return new OrderRepositoryV2();
     }
+
 }

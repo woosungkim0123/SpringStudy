@@ -784,6 +784,29 @@ implementation 'org.springframework.boot:spring-boot-starter-aop'
 <br>
 <br>
 
+## @Aspect
+
+- @Aspect 애노테이션으로 편리하게 어드바지어 생성 기능을 지원합니다.
+
+### 설명
+
+자동 프록시 생성기는 Advisor를 자동으로 찾아서 필요한 곳에 프록시를 생성하고 적용해줍니다.
+
+추가로 한가지 역할을 있는데 @Aspect를 찾아서 Advisor로 만들어줍니다.
+
+### 과정
+
+1. 스프링 애플리케이션 로딩 시점에 자동 프록시 생성기를 호출하고 @Aspect 애노테이션이 붙은 빈을 모두 찾습니다.
+2. @Aspect 어드바이저 빌더를 통해 @Aspect 정보를 기반으로 어드바이저를 생성합니다.
+3. 생성한 어드바이저를 @Aspect 어드바이저 빌더 내부에 저장합니다.
+
+![Aspect 어드바이저 생성](image/aspect_process.png)
+
+![Aspect 어드바이저 적용](image/aspect_advisor_apply.png)
+
+<br>
+<br>
+
 ## 프록시 개념
 
 클라이언트(요청하는 객체)가 직접 서버(요청을 처리하는 객체)에 요청하는 것이 아닌 대리자를 통해 간접적으로 요청할 때 대리자를 프록시(Proxy)라고 합니다.
