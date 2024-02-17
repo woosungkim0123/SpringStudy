@@ -5,6 +5,7 @@ import com.example.aop.order.OrderService;
 import com.example.aop.order.aop.AspectV1;
 import com.example.aop.order.aop.AspectV2;
 import com.example.aop.order.aop.AspectV3;
+import com.example.aop.order.aop.AspectV4;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.support.AopUtils;
@@ -19,7 +20,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 /**
  * 빈으로 등록해도 되지만 버전별로 다르게 동작하는 것을 확인하기 위해 테스트에서 Import로 등록
  */
-@Import(AspectV3.class)
+@Import(AspectV4.class)
+//@Import(AspectV3.class)
 //@Import(AspectV2.class)
 //@Import(AspectV1.class)
 @SpringBootTest
