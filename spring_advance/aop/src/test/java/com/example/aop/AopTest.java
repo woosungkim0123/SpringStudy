@@ -2,10 +2,7 @@ package com.example.aop;
 
 import com.example.aop.order.OrderRepository;
 import com.example.aop.order.OrderService;
-import com.example.aop.order.aop.AspectV1;
-import com.example.aop.order.aop.AspectV2;
-import com.example.aop.order.aop.AspectV3;
-import com.example.aop.order.aop.AspectV4;
+import com.example.aop.order.aop.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.support.AopUtils;
@@ -16,11 +13,12 @@ import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Slf4j
 /**
  * 빈으로 등록해도 되지만 버전별로 다르게 동작하는 것을 확인하기 위해 테스트에서 Import로 등록
  */
-@Import(AspectV4.class)
+@Slf4j
+@Import({ AspectV5.LogAspect.class, AspectV5.TransactionAspect.class })
+//@Import(AspectV4.class)
 //@Import(AspectV3.class)
 //@Import(AspectV2.class)
 //@Import(AspectV1.class)
