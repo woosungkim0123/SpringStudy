@@ -2,8 +2,14 @@
 
 ## AOP 이론
 
-[1. AOP 기초](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_advance/aop/notion/1_aop_basic)
+1. [AOP 기초](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_advance/aop/notion/1_aop_basic)
+   - AOP의 기본 개념과 용어
+   - AOP 적용 방식
+2. [어드바이스 종류](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_advance/aop/notion/2_advice_type)  
+   - @Around, @Before, @AfterReturning, @AfterThrowing, @After
+3. [포인트컷 지시자](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_advance/aop/notion/3_pointcut)
 
+<br>
 
 ## 버전별 변경 사항
 
@@ -44,6 +50,3 @@
 - 순서를 지정하기 위해서는 @Aspect 적용 단위로 @Order를 적용해야합니다. @Aspect는 클래스 단위에 적용됩니다.
 - 애스펙트를 별도의 클래스 파일로 분리하거나 내부 클래스로 분리하여 순서를 지정할 수 있습니다.
 - `AspectV5` 참조
-
-## 포인트컷 지시자
-

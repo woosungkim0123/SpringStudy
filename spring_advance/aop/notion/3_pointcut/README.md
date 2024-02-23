@@ -8,7 +8,7 @@
 
 ### 1. execution
 
-- 메소드 실행 조인 포인트를 매칭합니다.
+- 메소드 실행 조인 포인트를 선별합니다.
 - `execution(접근제어자? 반환타입 선언타입?메서드이름(파라미터) 예외?)`
 - `?`는 생략가능, `*` 같은 패턴 사용 가능
 - `.`: 정확하게 해당 위치의 패키지, `..`: 해당 위치의 패키지와 그 하위 패키지도 포함
@@ -16,7 +16,7 @@
 
 ### 2. within
 
-- 타입 패턴을 기반으로 어드바이스를 매칭합니다.
+- 타입을 기반으로 조인 포인트를 선별합니다.
 - 해당 타입이 매칭되면 그 안에 메소드(조인 포인트)들이 자동으로 매칭합니다.
 - `within(패키지명.타입명)`
 - 주의사항: within 사용시 표현식에 부모 타입을 지정하면 안됩니다. (execution과 다른점)
@@ -24,7 +24,7 @@
 
 ### 3. args
 
-- 메소드의 파라미터 타입을 기반으로 어드바이스를 매칭합니다.
+- 메소드의 파라미터 타입을 기반으로 조인 포인트를 선별합니다.
 - `args(파라미터타입)`
 - test 디렉토리의 `ArgsTest` 참조
 
@@ -41,7 +41,7 @@
 
 ### 4. @target, @within
 
-- 객체나 클래스에 달린 특정 애노테이션의 여부로 어드바이스를 매칭합니다.
+- 객체나 클래스에 달린 특정 애노테이션의 여부로 조인 포인트를 선별합니다.
 - test 디렉토리의 `AtTargetAtWithinTest` 참조
 
 **예시** 
@@ -84,27 +84,95 @@ class A {
 
 ### @annotation
 
-- 메소드에 특정 애노테이션이 적용된 경우 어드바이스를 매칭합니다.
+- 메소드에 특정 애노테이션이 적용된 경우 해당 메소드를 포인트컷 조건에 맞는 조인 포인트로 선별합니다.
 - test 디렉토리의 `AtAnnotationTest` 참조
 
 ### @args
 
-- 인수에 특정 애노테이션이 적용된 경우 어드바이스를 매칭합니다.
+- 인수에 특정 애노테이션이 적용된 경우 조인 포인트로 선별합니다.
 
 **예시**
 
-- `@args(test.Check)`: 전달된 인수의 런타임 타입에 @Check 애노테이션이 적용된 경우에 어드바이스를 적용합니다.
+- `@args(test.Check)`: 전달된 인수의 런타임 타입에 @Check 애노테이션이 적용된 경우 조인 포인트로 선별합니다.
 
 ### bean
 
-- 스프링 빈의 이름으로 어드바이스를 매칭합니다.
+- 스프링 빈의 이름으로 조인 포인트를 선별합니다.
 - `bean(빈이름)`
 - * 과 같은 패턴을 사용 가능
 - test 디렉토리의 `BeanTest` 참조
 
-### 
+## this, target
 
+- `this`는 스프링 빈으로 등록되어 있는 프록시 객체를 대상으로 조인 포인트를 선별합니다.
+- `target`은 타겟 객체를 대상으로 조인 포인트를 선별합니다.
+- `this`와 `target`은 적용 타입 하나를 정확하게 지정해야 합니다.
+- `this`와 `target` 둘다 부모 타입을 허용합니다.
+- test 디렉토리의 `ThisTargetJdkDynamicTest`, `ThisTargetCglibTest` 참조
 
+`this(com.example.aop.member.MemberService)`, `target(com.example.aop.member.MemberService)`
+
+### JDK 동적 프록시 적용
+
+![JDK 동적 프록시 this, target](../image/jdk_proxy_this_target.png)
+
+**MemberService 인터페이스 지정**
+
+- `this(com.example.aop.member.MemberService)`
+    - proxy를 보고 판단. 
+    - this는 부모 타입을 허용하기 때문에 AOP가 적용됩니다.
+
+- `target(com.example.aop.member.MemberService)`
+    - target을 보고 판단. 
+    - target은 부모 타입을 허용하기 때문에 AOP가 적용됩니다.
+
+> this와 target은 모두 AOP 적용 대상이 됩니다.
+
+**MemberServiceImpl 구체 클래스 지정**
+
+- `this(com.example.aop.member.MemberServiceImpl)`
+    - proxy를 보고 판단. 
+    - JDK 동적 프록시로 만들어진 proxy 객체는 MemberService 인터페이스를 기반으로 구현된 새로운 클래스
+    - 따라서 MemberServiceImpl를 전혀 모르기 때문에 **AOP 적용 대상이 아닙니다.**
+
+- `target(com.example.aop.member.MemberServiceImpl)`
+    - target을 보고 판단. 
+    - target 객체가 MemberServiceImpl이므로 AOP 적용 대상이 됩니다.
+
+> this는 AOP 적용 대상이 아닙니다.
+
+### CGLIB 프록시 적용
+
+![CGLIB 프록시 this, target](../image/cglib_proxy_this_target.png)
+
+**MemberService 인터페이스 지정**
+
+- `this(com.example.aop.member.MemberService)`
+    - proxy를 보고 판단. 
+    - this는 부모 타입을 허용하기 때문에 AOP가 적용됩니다.
+
+- `target(com.example.aop.member.MemberService)`
+    - target을 보고 판단. 
+    - target은 부모 타입을 허용하기 때문에 AOP가 적용됩니다.
+
+> this와 target은 모두 AOP 적용 대상이 됩니다.
+
+**MemberServiceImpl 구체 클래스 지정**
+
+- `this(com.example.aop.member.MemberServiceImpl)`
+    - proxy를 보고 판단. 
+    - CGLIB로 만들어진 proxy 객체는 MemberServiceImpl를 상속받아서 만들었기 때문에 AOP 적용 대상이 됩니다.
+
+- `target(com.example.aop.member.MemberServiceImpl)`
+    - target을 보고 판단. 
+    - target 객체가 MemberServiceImpl이므로 AOP 적용 대상이 됩니다.
+
+> this와 target은 모두 AOP 적용 대상이 됩니다.
+
+**정리**
+
+- 프록시를 대상으로 하는 this의 경우 구체 클래스를 지정하면 프록시 생성 전략에 따라 다른 결과가 나올 수 있습니다.
+- this, target 지시자는 단독으로 사용되기 보다는 파라미터 바인딩(매개변수를 어드바이스 전달 파트)에서 주로 사용됩니다.
 
 <br>
 
