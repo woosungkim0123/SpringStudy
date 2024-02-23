@@ -16,3 +16,24 @@
 
 ### 2. within
 
+- 해당 타입이 매칭되면 그 안에 메소드(조인 포인트)들이 자동으로 매칭합니다.
+- `within(패키지명.타입명)`
+- 주의사항: within 사용시 표현식에 부모 타입을 지정하면 안됩니다. (execution과 다른점)
+- test 디렉토리의 `WithinTest` 참조
+
+### 3. args
+
+- 메소드의 파라미터 타입을 기반으로 매칭합니다.
+- `args(파라미터타입)`
+- test 디렉토리의 `ArgsTest` 참조
+
+**차이점**
+
+1. `execution`은 파라미터 타입이 정확하게 일치해야 하지만, `args`는 파라미터 타입이 부모 타입이어도 매칭됩니다.
+
+2. 정적 vs 동적
+
+   - `execution(* *(java.io.Serializable))`: 메서드의 시그니처로 판단 (정적)
+   - `args(java.io.Serializable)`: 런타임에 전달된 인수로 판단 즉, 실제 객체 인스턴스가 넘어올 때 보고 판단 (동적)
+   
+> Serializable은 String의 부모 타입이므로 args를 사용하면 String 타입의 파라미터를 받는 메서드도 매칭됩니다.
