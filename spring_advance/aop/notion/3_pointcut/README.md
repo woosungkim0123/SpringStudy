@@ -101,3 +101,32 @@ class A {
 - `bean(빈이름)`
 - * 과 같은 패턴을 사용 가능
 - test 디렉토리의 `BeanTest` 참조
+
+### 
+
+
+
+<br>
+
+## 매개변수를 어드바이스에 전달
+
+- 포인트컷 표현식을 사용해서 어드바이스에 매개변수를 전달할 수 있습니다.
+- 대상: `this`, `target`, `args`, `@args`, `@target`, `@within`, `@annotation`
+- test 디렉토리의 `ParameterTest` 참조
+
+### 예시
+
+- 포인트컷의 이름과 매개변수의 이름을 맞추어야 합니다. 
+  - e.g. `arg` 
+- 타입이 메소드에 지정한 타입으로 제한됩니다. 
+  - e.g. 메서드 타입이 String이므로 arg(String,..) 으로 생각하면 됩니다.
+
+```java
+class A {
+    @Before("allMember() && args(arg,..)")
+    public void logArgs3(String arg) {
+        log.info("[logArgs3] arg={}", arg);
+    }
+}
+```
+
