@@ -12,7 +12,7 @@
 ```java
 @Slf4j
 @Aspect
-public class AspectV6Advice {
+public class AspectAdvice {
     @Around("com.example.aop.order.aop.Pointcuts.orderAndService()")
     public Object doTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
@@ -45,7 +45,7 @@ public class AspectV6Advice {
 ```java
 @Slf4j
 @Aspect
-public class AspectV6Advice {
+public class AspectAdvice {
     @Before("com.example.aop.order.aop.Pointcuts.orderAndService()")
     public void doBefore(JoinPoint joinPoint) {
         log.info("[before] {}", joinPoint.getSignature());
@@ -62,7 +62,7 @@ public class AspectV6Advice {
 ```java
 @Slf4j
 @Aspect
-public class AspectV6Advice {
+public class AspectAdvice {
     @AfterReturning(value = "hello.aop.order.aop.Pointcuts.orderAndService()", returning = "result")
     public void doReturn(JoinPoint joinPoint, Object result) {
         log.info("[return] {} return={}", joinPoint.getSignature(), result);
@@ -79,7 +79,7 @@ public class AspectV6Advice {
 ```java
 @Slf4j
 @Aspect
-public class AspectV6Advice {
+public class AspectAdvice {
     @AfterThrowing(value = "hello.aop.order.aop.Pointcuts.orderAndService()", throwing = "ex")
     public void doThrowing(JoinPoint joinPoint, Exception ex) {
         log.info("[ex] {} message={}", joinPoint.getSignature(), ex.getMessage());
