@@ -91,5 +91,57 @@ DI로 클라이언트 코드의 변경 없이 구현 클래스를 변경하려�
 
 그러나 테스트나 여러가지 이유로 AOP 프록시가 적용된 구체 클래스를 직접 의존관계 주입을 받아야 하는 경우 CGLIB을 사용해서 AOP를 적용하면 문제가 발생하지 않습니다.
 
+스프링 부트 2.0부터는 CGLIB을 기본으로 사용하도록 변경함으로써 구체 클래스 타입으로 의존관계를 주입하는 문제를 해결하였습니다.
+
 ## 3. CGLIB의 단점
 
+CGLIB는 구체 클래스를 상속 받기 때문에 밑에 문제들이 발생합니다.
+
+### 발생하는 문제
+
+1. 대상 클래스에 기본 생성자 필수
+
+    - 자식 클래스의 생성자를 호출할 때 자식 클래스의 생성자에서 부모 클래스의 생성자도 호출해야 한다. (생략되어 있다면 자식 클래스의 생성자 첫줄에 부모 클래스의 기본 생성자를 호출하는 super() 가 자동으로 들어갑니다)
+    - CGLIB은 대상 클래스를 상속 받고, 생성자에서 대상 클래스의 기본 생성자를 호출합니다. (대상 클래스에 기본 생성자가 없으면 에러가 발생합니다.)
+
+2. 생성자 2번 호출 문제
+    
+    - 실제 target 객체를 생성할 때 한번, 프록시 객체를 생성할 때 상속받고 부모 인스턴스 생성자를 호출하면서 두번 호출됩니다.
+   
+3. final 키워드 클래스, 메서드 사용 불가
+    
+    - final 키워드가 사용된 클래스나 메서드는 상속이 불가능합니다.
+
+### 스프링의 해결책
+
+1. 기본 생성자 필수 문제를 objenesis 라이브러리를 사용하여 해결합니다. (기본 생성자 없이 객체 생성이 가능)
+
+   - `StdInstantiatorStrategy`은 JVM 환경에서 클래스의 새 인스턴스를 생성자 호출없이 생성하기 위한 전략을 제공합니다.
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception {
+        // new ExampleClass(); 기본 생성자 없어서 에러
+        ExampleClass exampleClass = ObjenesisHelper.newInstance(ExampleClass.class); // 객체 생성
+        exampleClass.print();
+    }
+
+   private static class ExampleClass {
+      private int value;
+
+      public ExampleClass(int value) {
+         this.value = value;
+      }
+
+      public void print() {
+         System.out.println("Hi");
+      }
+   }
+}
+```
+
+2. objenesis 라이브러리를 사용하여 생성자 2번 호출 문제를 해결할 수 있습니다.
+
+3. final 키워드는 애플리케이션에서 자주 사용되지 않습니다.
+
+### 
