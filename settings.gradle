@@ -49,6 +49,11 @@ project(':proxy').projectDir = new File('spring_advance/proxy')
 include "aop"
 project(':aop').projectDir = new File('spring_advance/aop')
 
+// SPRING_07_SPRING_BOOT
+include "was"
+project(':was').projectDir = new File('spring_evolution/was')
+
+
 // JPA_01_BASIC
 include "jpa_book"
 project(':jpa_book').projectDir = new File('jpa_basic/jpa_book')
