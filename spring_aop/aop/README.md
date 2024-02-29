@@ -2,12 +2,12 @@
 
 ## AOP 이론
 
-1. [AOP 기초](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_advance/aop/notion/1_aop_basic)
+1. [AOP 기초](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/aop/notion/1_aop_basic)
    - AOP의 기본 개념과 용어
    - AOP 적용 방식
-2. [어드바이스 종류](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_advance/aop/notion/2_advice_type)  
+2. [어드바이스 종류](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/aop/notion/2_advice_type)  
    - @Around, @Before, @AfterReturning, @AfterThrowing, @After
-3. [포인트컷 지시자](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_advance/aop/notion/3_pointcut)
+3. [포인트컷 지시자](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/aop/notion/3_pointcut)
 
 <br>
 
