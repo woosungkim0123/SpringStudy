@@ -1,8 +1,5 @@
 package hello.advanced.app.common;
 
-import hello.advanced.app.common.LogTrace;
-import hello.advanced.app.common.TraceId;
-import hello.advanced.app.common.TraceStatus;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
