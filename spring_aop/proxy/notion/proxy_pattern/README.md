@@ -9,6 +9,8 @@
 
 ![프록시 패턴](../image/proxy_pattern.png)
 
+<br>
+
 ## 예시 코드
 
 ### 프록시 패턴 적용 전

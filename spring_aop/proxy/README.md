@@ -6,9 +6,22 @@
 
 ## 목차
 
-- [프록시 개념]()
+## 중요 목차
 
-## V1 (인터페이스 기반 환경에 프록시 적용)
+[중요 개념](#들어가기-전-중요-개념)
+
+[리플렉션, 동적 프록시, CGLIB](#동적-프록시-적용)
+
+<br>
+
+## 들어가기 전 중요 개념
+
+- [프록시 개념](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/proxy_notion)
+- [프록시 패턴](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/proxy_pattern)
+- [데코레이터 패턴](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/decorator_pattern)
+
+
+## 인터페이스 기반 환경에 프록시 적용
 
 각 레이어의 인터페이스를 구현한 프록시를 추가한 후 (e.g. OrderControllerV1 인터페이스를 바탕으로 OrderControllerV1Proxy 추가)
 빈 설정 파일에서 실제 객체를 반환하지 않고 프록시를 반환하도록 변경합니다. (프록시를 빈으로 대신 등록하고 실제 객체는 빈으로 등록하지 않습니다.)
@@ -26,7 +39,7 @@
 
 <br>
 
-## V2 (구체 클래스 기반 환경에 프록시 적용)
+## 구체 클래스 기반 환경에 프록시 적용
 
 구체 클래스를 상속받은 프록시를 추가해서 다형성을 활용해서 구체 클래스 대신 프록시를 사용하도록 변경합니다.
 
@@ -42,103 +55,26 @@
 
 <br>
 
-### 정리
+## 동적 프록시 적용
 
-JDK 동적 프록시 덕분에 적용 대상 만큼 프록시 객체를 만들지 않아도 됩니다. 그리고 같은 부가 기능 로직을 한번만 개발하면 공통으로 적용할 수 있습니다.
+JDK 동적 프록시를 이용하여 적용 대상 만큼 프록시 객체를 만들지 않아도 되도록 변경하였습니다.
 
-**실행 순서**
+이로 인해 같은 부가 기능 로직을 한번만 개발하면 공통으로 적용할 수 있습니다.
 
-![동적 프록시 실행 순서](notion/image/dynamic_proxy_running_order.png)
+동적 프록시는 클래스 기반의 프록시를 지원하지 않아서 대안으로 CGLIB 같은 바이트코드 조작 라이브러리를 사용합니다.
 
-**JDK 동적 프록시 도입 전**
+`config/v2_dynamic_proxy` 패키지 참조
 
-![동적 프록시 도입 전](notion/image/dynamic_proxy_apply_before.png)
+[[ 리플렉션 (동적 프록시 필수 개념) 간단하게 알아보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/reflection)
 
-**JDK 동적 프록시 도입 후**
+[[ 동적 프록시 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/dynamic_proxy)
 
-![JDK 동적 프록시 도입 후](notion/image/dynamic_proxy_apply_after.png)
+[[ CGLIB ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/cglib)
 
 
-## CGLIB(Code Generation Library)
+<br>
 
-- CGLIB는 바이트코드를 조작해서 동적으로 클래스를 생성하는 기술을 제공하는 라이브러리입니다.
-- 인터페이스가 없어도 구체 클래스만 가지고 동적 프록시를 만들어 낼 수 있습니다.
-- 스프링 프레임워크에 들어와서 별도로 추가할 필요가 없습니다.
-- 우리가 직접 CGLIB을 사용하는 경우는 없고 스프링의 ProxyFactory 기술이 CGLIB을 편리하게 사용할 수 있도록 도와줍니다.
-
-![CGLIB](notion/image/cglib.png)
-
-### 코드 예시
-
-```java
-// 구체 클래스
-@Slf4j
-public class ConcreteService {
-    public void call() {
-        log.info("ConcreteService 호출");
-    }
-}
-
-@Slf4j
-public class TimeMethodInterceptor implements MethodInterceptor {
-
-   private final Object target;
-
-   public TimeMethodInterceptor(Object target) {
-      this.target = target;
-   }
-
-   /**
-    * TimeMethodInterceptor 는 MethodInterceptor 인터페이스를 구현해서 CGLIB 프록시의 실행 로직을 정의한다 (JDK 동적 프록시의 InvocationHandler 와 비슷)
-    * @param obj - CGLIB가 적용된 객체
-    * @param method - 호출된 메서드
-    * @param args - 메서드를 호출하면서 전달된 인수
-    * @param proxy - 메서드 호출에 사용 (권장)
-    */
-   @Override
-   public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-      log.info("TimeProxy 실행");
-      long startTime = System.currentTimeMillis();
-
-      // 메서드를 사용해도되지만 CGLIB에서는 proxy를 사용을 권장함 (조금 더 빠름)
-      // Object result = method.invoke(target, args);
-      Object result = proxy.invoke(target, args);
-
-      long endTime = System.currentTimeMillis();
-      long resultTime = endTime - startTime;
-      log.info("TimeProxy 종료 resultTime={}", resultTime);
-      return result;
-   }
-}
-
-@Slf4j
-public class CglibTest {
-   @Test
-   void cglib() {
-      ConcreteService target = new ConcreteService();
-      // Enhancer 는 CGLIB의 핵심 클래스로서 프록시 객체를 생성하는 역할을 한다
-      Enhancer enhancer = new Enhancer();
-      enhancer.setSuperclass(ConcreteService.class);// 어떤 구체 클래스를 상속 받을지 설정
-      enhancer.setCallback(new TimeMethodInterceptor(target)); // MethodInterceptor가 Callback 인터페이스를 구현하고 있음
-      ConcreteService proxy = (ConcreteService) enhancer.create();
-
-      log.info("target={}", target.getClass()); // class hello.proxy.ConcreteService
-      log.info("proxy={}", proxy.getClass()); // class hello.proxy.ConcreteService$$EnhancerByCGLIB$$3d5c645b
-
-      proxy.call();
-   }
-}
-```
-
-### 제약
-
-- 부모 클래스의 생성자를 체크해야 합니다. -> CGLIB는 자식 클래스를 동적으로 생성하기 때문에 기본 생성자가 필요합니다.
-- final 클래스, final 메서드는 사용이 불가능합니다. -> final 클래스는 예외가 발생하고 final 메서드는 프록시 로직이 동작하지 않습니다.
-
-기본 생성자를 추가하고 의존관계를 setter를 사용해서 주입하면 CGLIB을 적용할 수 있으나 ProxyFactory를 사용하면 이런 제약을 해결할 수 있습니다.
-
-인터페이스가 있으면 JDK 동적 프록시를 사용하고 인터페이스가 없으면 CGLIB을 사용하는 방식이 스프링의 ProxyFactory가 사용하는 방식입니다.
-
+# 여기서부터 수정 필요
 
 ## ProxyFactory
 
@@ -693,83 +629,3 @@ implementation 'org.springframework.boot:spring-boot-starter-aop'
 
 
 
-
-## 리플렉션
-
-리플렉션은 구체적인 클래스 타입을 알지 못하더라도 그 클래스의 메서드, 타입, 변수들에 접근할 수 있도록 해주는 자바 API를 말하며, 
-컴파일 시간이 아닌 실행 시간에 동적으로 특정 클래스의 정보를 추출할 수 있는 기법을 말합니다.
-
-### 사용 목적
-
-- 런타임 시점에서 어떤 클래스를 실행 해야할지 가져와 실행해야하는 경우 필요합니다.
-- 프레임워크나 IDE에서 이런 동적 바인딩을 이용한 기능을 제공합니다.
-
-### 리플렉션을 사용해서 가져올 수 있는 정보
-
-- Class
-- Constructor
-- Method
-- Field
-
-### 사용 예시
-
-- IntelliJ의 자동완성 기능
-- 스프링 어노테이션
-
-### 코드 예시
-
-**리플렉션 사용 전**
-
-```java
-public class ReflectionTest {
-
-    @Test
-    void noReflection() {
-        Hello target = new Hello();
-        
-        // 공통 로직1시작
-        System.out.println("start");
-        String result = target.callA(); // 호출하는 메서드만 다르고 다 똑같음
-        System.out.println("result = " + result);
-        // 공통 로직1끝
-       
-        // 공통 로직2시작
-        System.out.println("start");
-        String result2 = target.callB(); // 호출하는 메서드만 다르고 다 똑같음
-        System.out.println("result2 = " + result2);
-        // 공통 로직2끝
-    }
-}
-```
-
-**리플렉션 사용 후**
-
-```java
-public class ReflectionTest {
-   @Test
-   void reflection1() throws Exception {
-      Class classHello = Class.forName("hello.proxy.dynamic.ReflectionTest$Hello"); // 클래스 정보
-      Hello target = new Hello();
-      
-      Method methodCallA = classHello.getMethod("callA"); // callA 메서드 정보
-      dynamicCall(methodCallA, target); // 획득한 메서드 메타정보로 실제 인스턴스의 메서드를 호출한다
-      
-      Method methodCallB = classHello.getMethod("callB"); // callB 메서드 정보
-      dynamicCall(methodCallB, target); // 획득한 메서드 메타정보로 실제 인스턴스의 메서드를 호출한다
-   }
-   
-    private void dynamicCall(Method method, Object target) throws Exception {
-        System.out.println("start");
-
-        Object result = method.invoke(target);
-
-        System.out.println("result = " + result);
-    }
-}
-```
-
-### 주의 사항
-
-- 리플렉션은 가급적이면 안써야합니다.
-- 리플렉션을 사용하면 클래스와 메타정보를 사용해서 동적으로 유연하게 만들 수 있으나 런타임에 동작하기 때문에 컴파일 시점에 오류를 잡을 수 없습니다.
-- 리플렉션은 프레임워크 개발이나 또는 매우 일반적인 공통 처리가 필요할 때 부분적으로 주의해서 사용해야 한다.
