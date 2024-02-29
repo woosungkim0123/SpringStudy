@@ -11,5 +11,4 @@ public class HelloController {
         System.out.println("HelloController.hello");
         return "hello spring!";
     }
-
 }
