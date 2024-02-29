@@ -1,13 +1,16 @@
 package hello.proxy.config.v2_dynamic_proxy;
 
 import hello.proxy.app.v1.*;
+import hello.proxy.config.LogTraceConfig;
 import hello.proxy.config.v2_dynamic_proxy.handler.LogTraceFilterHandler;
 import hello.proxy.trace.LogTrace;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import java.lang.reflect.Proxy;
 
+@Import({LogTraceConfig.class})
 @Configuration
 public class DynamicFilterConfig {
 
