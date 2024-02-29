@@ -1,25 +1,30 @@
-# 로그 추적기 프록시 적용
+# 로그 추적기 (프록시)
 
 - 원본 코드를 전혀 수정하지 않고 로그 추적 기능 추가
 - 특정 메서드에는 적용 안되도록 설정
 - 다양한 케이스(인터페이스가 있는 구현 클래스, 인터페이스가 없는 구체 클래스, 컴포넌트 스캔 대상 등)에 적용
 
+<br>
+
 ## 목차
 
 ## 중요 목차
 
-[중요 개념](#들어가기-전-중요-개념)
+[[ 프록시 ]](#들어가기-전-중요-개념)
 
-[리플렉션, 동적 프록시, CGLIB](#동적-프록시-적용)
+[[ 리플렉션, 동적 프록시, CGLIB ]](#동적-프록시-적용)
 
 <br>
 
-## 들어가기 전 중요 개념
+## 프록시
 
-- [프록시 개념](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/proxy_notion)
-- [프록시 패턴](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/proxy_pattern)
-- [데코레이터 패턴](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/decorator_pattern)
+[[ 프록시 개념 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/proxy_notion)
 
+[[ 프록시 패턴 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/proxy_pattern)
+
+[[ 데코레이터 패턴 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/decorator_pattern)
+
+<br>
 
 ## 인터페이스 기반 환경에 프록시 적용
 
@@ -65,11 +70,11 @@ JDK 동적 프록시를 이용하여 적용 대상 만큼 프록시 객체를 �
 
 `config/v2_dynamic_proxy` 패키지 참조
 
-[[ 리플렉션 (동적 프록시 필수 개념) 간단하게 알아보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/reflection)
+[[ 리플렉션 (동적 프록시 필수 개념) 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/reflection)
 
 [[ 동적 프록시 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/dynamic_proxy)
 
-[[ CGLIB ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/cglib)
+[[ CGLIB 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/cglib)
 
 
 <br>

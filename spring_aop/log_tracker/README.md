@@ -74,7 +74,7 @@ public class ConcurrencyExample {
 - 쓰레드 로컬을 사용하여 동시성 문제를 해결하였습니다.
 - `app/v4` 패키지, `app/common/ThreadLocalLogTrace` 참조
 
-[[ 쓰레드 로컬 간단하게 알아보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/thread_local)
+[[ 쓰레드 로컬 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/thread_local)
 
 ### 단점
 
@@ -89,7 +89,7 @@ public class ConcurrencyExample {
 - 코드 수정시 변경이 여러곳이 아닌 한곳에서만 수정하면 됩니다. (단일 책임 원칙)
 - `app/v5` 패키지 참조
 
-[[ 템플릿 메서드 패턴 간단하게 알아보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/template_method)
+[[ 템플릿 메서드 패턴 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/template_method)
 
 ### 단점
 
@@ -103,7 +103,7 @@ public class ConcurrencyExample {
 - 템플릿 콜백 패턴을 사용하여 코드를 정리하였습니다.
 - `app/v6` 패키지 참조
 
-[[ 템플릿 콜백 패턴 간단하게 알아보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/template_callback)
+[[ 템플릿 콜백 패턴 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/template_callback)
 
 <br>
 

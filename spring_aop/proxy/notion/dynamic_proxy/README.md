@@ -118,7 +118,7 @@ public class JdkDynamicTest {
 
 여기서는 `AppClassLoader`를 사용합니다.
 
-[[ 클래스 로더 간단하게 알아보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/class_loader)
+[[ 클래스 로더 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy/notion/class_loader)
 
 두번째 인자는 어떤 인터페이스를 기반으로 프록시를 만들지, 세번째 인자는 프록시에 사용되는 로직입니다.
 
