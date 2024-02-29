@@ -1,20 +1,23 @@
-package hello.advanced.app.common;
+package hello.advanced.app.v6;
 
-public abstract class AbstractTemplate<T> {
+import hello.advanced.app.common.LogTrace;
+import hello.advanced.app.common.TraceStatus;
+
+public class TraceTemplate {
 
     private final LogTrace trace;
 
-    protected AbstractTemplate(LogTrace trace) {
+    public TraceTemplate(LogTrace trace) {
         this.trace = trace;
     }
 
-    public T execute(String message) {
+    public <T> T execute(String message, TraceCallback<T> callback) {
         TraceStatus status = null;
 
         try {
             status = trace.begin(message);
 
-            T result = call();
+            T result = callback.call();
 
             trace.end(status);
             return result;
@@ -23,6 +26,4 @@ public abstract class AbstractTemplate<T> {
             throw e;
         }
     }
-
-    protected abstract T call();
 }

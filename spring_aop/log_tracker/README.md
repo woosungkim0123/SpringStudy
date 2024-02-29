@@ -4,8 +4,15 @@ HTTP 요청 단위로 추적 가능한 로그 추적기를 만드는 것이 목�
 
 ## 중요 목차
 
-[v4 쓰레드 로컬 사용 버전](#v4-쓰레드-로컬-사용)
+[v4 쓰레드 로컬](#v4-쓰레드-로컬-사용)
 
+[v5 템플릿 메서드 패턴](#v5-템플릿-메서드-패턴-사용)
+
+dd
+
+dd
+
+<br>
 
 ## v1
 
@@ -17,6 +24,8 @@ HTTP 요청 단위로 추적 가능한 로그 추적기를 만드는 것이 목�
 2. 컨트롤러, 서비스, 리포지토리 각 단계별로 트랜잭션 ID, Level의 값을 동기화 해야합니다.
 3. 중복된 부분이 많아 코드가 복잡합니다.
 
+<br>
+
 ## v2
 
 파라미터로 트랜잭션 ID와 Level을 넘겨 동기화 처리하였습니다.
@@ -27,6 +36,8 @@ HTTP 요청 단위로 추적 가능한 로그 추적기를 만드는 것이 목�
 2. 기존 코드가 있는 상황에 기능 추가시 모든 파라미터를 수정해야합니다.
 3. 첫번째 호출되는 곳에서는 `begin`을 호출하고 나머지에서는 `beginSync`를 호출해야합니다.
 4. 컨트롤러가 아닌 다른 곳에서 서비스를 처음 호출하는 상황에는 traceId가 없습니다.
+
+<br>
 
 ## v3
 
@@ -63,189 +74,41 @@ public class ConcurrencyExample {
 - 쓰레드 로컬을 사용하여 동시성 문제를 해결하였습니다.
 - `app/v4` 패키지, `app/common/ThreadLocalLogTrace` 참조
 
-[쓰레드 로컬에 대해 알아보기](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/thread_local)
+[쓰레드 로컬 간단하게 알아보기](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/thread_local)
 
 ### 단점
 
 - 핵심 기능과 부가 기능(로그 추적기) 코드가 섞여 있습니다.
 - 부가 기능 코드가 핵심 기능 코드보다 더 많아 코드가 복잡합니다.
 
-
+<br>
 
 ## V5 (템플릿 메서드 패턴 사용)
 
-- 템플릿 메서드 패턴을 사용하여 코드를 정리하였습니다.
+- 템플릿 메서드 패턴을 사용하여 동일한 패턴의 중복을 해결하였습니다.
 - 코드 수정시 변경이 여러곳이 아닌 한곳에서만 수정하면 됩니다. (단일 책임 원칙)
+- `app/v5` 패키지 참조
+
+[템플릿 메서드 패턴 간단하게 알아보기](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/template_method)
 
 ### 단점
 
 - 자식 클래스에서 부모 클래스의 기능을 사용하지 않을 경우에도 부모 클래스의 기능을 상속받아야 합니다. (상속의 단점)
 - 별도의 클래스나 익명 내부 클래스를 만들어야 하는 부분도 복잡합니다.
 
-### 템플릿 메서드 패턴
-
-코드에서 동일한 패턴으로 중복이 계속 발생하는 데 이때 템플릿 메서드 패턴을 사용하여 해결 할 수 있습니다.
-
-변하는 부분과 변하지 않는 부분을 분리하는 것으로 구조를 정의하고 일부 단계의 구현을 서브클래스로 연기하는 것입니다.
-
-```java
-public class TemplateMethodTest {
-
-    private void logic1() {
-        long startTime = System.currentTimeMillis();
-        
-        log.info("비즈니스 로직1 실행"); // 이 부분 뺴고 나머지는 변하지 않는 부분
-        
-        long endTime = System.currentTimeMillis();
-        long resultTime = endTime - startTime;
-        log.info("resultTime={}", resultTime);
-    }
-}
-```
-
-**템플릿 메서드 패턴 적용시**
-
-```java
-public abstract class AbstractTemplate {
-    public void execute() {
-        long startTime = System.currentTimeMillis();
-        
-        call(); // 상속
-        
-        long endTime = System.currentTimeMillis();
-        long resultTime = endTime - startTime;
-        log.info("resultTime={}", resultTime);
-    }
-    
-    protected abstract void call();
-}
-
-// 익명 내부 클래스를 사용해도 됩니다.
-public class SubClassLogic1 extends AbstractTemplate {
-    @Override
-    protected void call() {
-        log.info("비즈니스 로직1 실행");
-    }
-}
-```
+<br>
 
 ## V6 (템플릿 콜백 패턴 사용)
 
 - 템플릿 콜백 패턴을 사용하여 코드를 정리하였습니다.
+- `app/v6` 패키지 참조
 
-### 전략 패턴
+[템플릿 콜백 패턴 간단하게 알아보기](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker/notion/template_callback)
 
-템플릿 콜백 패턴 전에 전략 패턴에 대해 알아보겠습니다.
- 
-템플릿 메서드 패턴과 유사하지만 변하지 않는 부분을 Context에 두고 변하는 부분을 Strategy 인터페이스로 만들어 이를 구현하도록 해서 문제를 해결합니다.
-
-**필드에 전략을 주입하는 방식**
-
-- Context와 Strategy를 한번 조립하고 나면 Context를 실행만 하면 되는 것이 장점입니다.
-- 조립한 이후에 전략을 변경하기 어렵다는 단점이 있습니다. 전략을 변경하면 동시성 이슈를 고려해야합니다.
-
-**인자로 전략을 주입하는 방식**
-
-- 메서드의 인자로 전략을 주입받음으로써 실시간으로 전략을 변경할 수 있습니다.
-- 호출시마다 전략을 주입해야 하는 것이 단점입니다.
-
-```java
-public class Context {
-    // 필드로 선언해서 생성자로 받는 방법도 있지만 메서드로 받는 것이 유연하게 변경가능
-    public void execute(Strategy strategy) {
-        long startTime = System.currentTimeMillis();
-
-        strategy.call(); // 위임
-
-        long endTime = System.currentTimeMillis();
-        long resultTime = endTime - startTime;
-        log.info("resultTime={}", resultTime);
-    }
-}
-
-public interface Strategy {
-    void call();
-}
-
-public class StrategyLogic1 implements Strategy{
-    @Override
-    public void call() {
-        log.info("비지니스1 실행");
-    }
-}
-
-public class StrategyLogic2 implements Strategy{
-    @Override
-    public void call() {
-        log.info("비지니스2 실행");
-    }
-}
-
-public class ContextTest {
-    @Test
-    void strategy() {
-        Context context = new Context();
-        context.execute(new StrategyLogic1()); // 구현이 아닌 람다를 사용해서 처리 가능합니다. () -> log.info("비지니스1 실행");
-        context.execute(new StrategyLogic2());
-    }
-}
-```
-
-### 템플릿 콜백 패턴
-
-전략 패턴에서 변하는 부분을 파라미터로 넘겨 실행시켰는 데 이때 다른 코드의 인수로 넘겨주어 실행 가능한 코드를 콜백(callback)이라고 합니다.
-
-```java
-public class ContextTest {
-    @Test
-    void strategy() {
-        Context context = new Context();
-        context.execute(() -> log.info("비지니스1 실행")); // 여기서 람다 함수 부분이 콜백입니다.
-    }
-}
-```
-
-스프링에서는 메서드로 전략을 넘기는 방식의 전략 패턴을 템플릿 콜백 패턴이라고 부릅니다. 
-
-전략 패턴에서 Context가 템플릿 역할을 하고 Strategy 부분이 콜백으로 넘어 오게됩니다.
-
-- `Context` -> `Template`
-- `Strategy` -> `Callback`
-
-템플릿 콜백 패턴은 GOF 패턴이 아니고 스프링 안에서 부르는 명칭이고 전략 패턴에서 템플릿과 콜백 부분이 강조된 패턴입니다.
-
-스프링은 JdbcTemplate, RestTemplate, RedisTemplate 등 XxxTemplate 같은 다양한 템플릿 콜백 패턴을 사용한 예들이 많습니다. 
-
-```java
-public class TimeLogTemplate {
-
-    public void execute(Callback callBack) {
-        long startTime = System.currentTimeMillis();
-
-        callBack.call();
-
-        long endTime = System.currentTimeMillis();
-        long resultTime = endTime - startTime;
-        log.info("resultTime={}", resultTime);
-    }
-}
-
-public interface Callback {
-    void call();
-}
-
-public class TemplateCallbackTest {
-    @Test
-    void callback() {
-        TimeLogTemplate template = new TimeLogTemplate();
-        template.execute(() -> log.info("비지니스 로직1 실행"));
-        template.execute(() -> log.info("비지니스 로직2 실행"));
-    }
-}
-```
+<br>
 
 ## 한계
 
 여러가지 방식을 사용해서 로그 추적기를 만들어 보았지만 로그 추적기를 적용하려면 원본 코드를 수정해야 한다는 한계가 존재합니다. 
 
-수백개의 클래스에 적용시 많은 코드를 수정해야 합니다. (이를 해결하기 위해 AOP를 사용합니다.)
+수백개의 클래스에 적용시 많은 코드를 수정해야 합니다.

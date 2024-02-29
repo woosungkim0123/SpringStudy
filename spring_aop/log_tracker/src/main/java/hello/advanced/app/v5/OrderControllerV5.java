@@ -1,7 +1,6 @@
 package hello.advanced.app.v5;
 
 import hello.advanced.app.common.LogTrace;
-import hello.advanced.app.common.AbstractTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

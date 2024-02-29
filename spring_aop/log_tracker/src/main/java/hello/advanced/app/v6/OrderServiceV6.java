@@ -1,7 +1,6 @@
 package hello.advanced.app.v6;
 
 import hello.advanced.app.common.LogTrace;
-import hello.advanced.app.common.TraceTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
