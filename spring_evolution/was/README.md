@@ -9,8 +9,18 @@
 
 ## 주요 목차
 
-[[ WAR 개념 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/was/notion/war)
+[[ WAR 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/was/notion/war)
 
-[[ 서블릿 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/was/notion/servlet)
+- JAR vs WAR
+- WAR 구조
+- WAR 빌드, 배포
 
-[[ 스프링 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/was/notion/spring)
+[[ 서블릿 방식 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/was/notion/servlet)
+
+- 서블릿 컨테이너 초기화
+- 애플리케이션 초기화
+
+[[ 스프링 방식 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/was/notion/spring)
+
+- 스프링 컨테이너 등록 과정
+- 스프링 MVC 서블릿 컨테이너 초기화 지원

@@ -2,9 +2,9 @@
 
 ## WAS
 
-- WAR 배포
-- 서블릿 사용
-- 스프링 사용
+- WAR
+- 서블릿 방식 사용
+- 스프링 방식 사용
 
 [[ WAS 프로젝트 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/was)
 
@@ -13,7 +13,7 @@
 ## 내장 톰캣
 
 - 내장 톰캣 사용
-- 스프링 부트 시작 클래스 사용
+- 직접 만든 부트 클래스 사용
 
 [[ 내장 톰캣 프로젝트 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/embed)
 
