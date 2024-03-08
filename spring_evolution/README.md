@@ -19,4 +19,9 @@
 
 <br>
 
-##
+## 부트 자동 구성
+
+- Executable Jar
+- 자동 라이브러리 관리
+
+[[ 부트 자동 구성 프로젝트 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/autoconfig)
