@@ -1,8 +1,5 @@
 rootProject.name = 'spring_jpa_deep_dive'
 
-// SPRING_00_HELLO
-include "spring_basic"
-
 // SPRING_01_CORE
 include "spring_core"
 

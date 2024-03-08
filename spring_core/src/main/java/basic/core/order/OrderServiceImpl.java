@@ -15,9 +15,6 @@ import org.springframework.stereotype.Component;
 //@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-//    private final MemberRepository memberRepository = new MemoryMemberRepository();
-//    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
-//    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 //

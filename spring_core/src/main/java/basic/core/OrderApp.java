@@ -12,17 +12,20 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class OrderApp {
     public static void main(String[] args) {
-//        AppConfig appConfig = new AppConfig();
-//
-//        MemberService memberService = appConfig.memberService();
-//        OrderService orderService = appConfig.orderService();
+        /**
+         * 구성 영역과 실행 영역을 분리
+         */
+        // Spring 없이 실행
+        // AppConfig appConfig = new AppConfig();
+        // MemberService memberService = appConfig.memberService();
+        // OrderService orderService = appConfig.orderService();
 
         // Spring으로 전환
         ApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
         MemberService memberService = ac.getBean("memberService", MemberService.class);
         OrderService orderService = ac.getBean("orderService", OrderService.class);
 
-        // 일단 VIP회원 만들고
+        // 로직 실행
         Long memberId = 1L;
         Member member = new Member(memberId, "woosung", Grade.VIP);
         memberService.join(member);
