@@ -54,8 +54,8 @@ include "was"
 project(':was').projectDir = new File('spring_evolution/was')
 include "embed"
 project(':embed').projectDir = new File('spring_evolution/embed')
-include "boot"
-project(':boot').projectDir = new File('spring_evolution/boot')
+include "autoconfig"
+project(':autoconfig').projectDir = new File('spring_evolution/autoconfig')
 
 // JPA_01_BASIC
 include "jpa_book"
