@@ -59,10 +59,6 @@ public class AppConfig$$EnhancerBySpringCGLIB$$f3f3e3d extends AppConfig {
 
 ## 컴포넌트 스캔과 의존관계 자동 주입
 
-
-
-
-
 ### 컴포넌트 스캔
 
 스프링은 설정 정보가 없어도 자동으로 스프링 빈을 등록하는 컴포넌트 스캔이라는 기능을 제공합니다.
@@ -88,7 +84,7 @@ public class AppConfig$$EnhancerBySpringCGLIB$$f3f3e3d extends AppConfig {
 
 <br>
 
-## 조회 빈이 두 개 이상일 때
+## 조회 빈이 두 개 이상일 때 (Qualifier, Primary)
 
 `@Autowired`는 타입으로 매칭하고 결과가 2개 이상이면 필드명, 파라미터 명으로 빈 이름을 매칭합니다.
 
@@ -159,39 +155,278 @@ public class OrderServiceImpl implements OrderService {
 }
 ```
 
+### 다중 빈이 필요할 때
 
-의도적으로 정말 해당 타입의 스프링 빈이 다 필요한 경우도 있다.
-예를 들어서 할인 서비스를 제공하는데, 클라이언트가 할인의 종류(rate, fix)를 선택할 수 있다고
-가정해보자. 스프링을 사용하면 소위 말하는 전략 패턴을 매우 간단하게 구현할 수 있다.
+의도적으로 여러 빈을 모두 주입받아야 할 때가 있습니다.
 
-Map<String, DiscountPolicy> : map의 키에 스프링 빈의 이름을 넣어주고, 그 값으로
-DiscountPolicy 타입으로 조회한 모든 스프링 빈을 담아준다.
-List<DiscountPolicy> : DiscountPolicy 타입으로 조회한 모든 스프링 빈을 담아준다.
-만약 해당하는 타입의 스프링 빈이 없으면, 빈 컬렉션이나 Map을 주입한다
+예를 들어서 할인 서비스를 제공하는데, 클라이언트가 할인의 종류(rate, fix)를 선택할 수 있다고 가정해보겠습니다. 
 
+스프링을 사용하면 이런 전략 패턴을 매우 간단하게 구현할 수 있습니다.
 
+받을 때 `Map<String, DiscountPolicy>`나 `List<DiscountPolicy>`로 받으면 됩니다. 만약 해당하는 타입이 없으면 빈 컬렉션이나 Map을 주입합니다. (Map의 키는 빈 이름)
 
-애플리케이션은 크게 업무 로직과 기술 지원 로직으로 나눌 수 있다.
-업무 로직 빈: 웹을 지원하는 컨트롤러, 핵심 비즈니스 로직이 있는 서비스, 데이터 계층의 로직을 처리하는
-리포지토리등이 모두 업무 로직이다. 보통 비즈니스 요구사항을 개발할 때 추가되거나 변경된다.
-기술 지원 빈: 기술적인 문제나 공통 관심사(AOP)를 처리할 때 주로 사용된다. 데이터베이스 연결이나,
-공통 로그 처리 처럼 업무 로직을 지원하기 위한 하부 기술이나 공통 기술들이다.
-업무 로직은 숫자도 매우 많고, 한번 개발해야 하면 컨트롤러, 서비스, 리포지토리 처럼 어느정도 유사한
-패턴이 있다. 이런 경우 자동 기능을 적극 사용하는 것이 좋다. 보통 문제가 발생해도 어떤 곳에서 문제가
-발생했는지 명확하게 파악하기 쉽다.
-기술 지원 로직은 업무 로직과 비교해서 그 수가 매우 적고, 보통 애플리케이션 전반에 걸쳐서 광범위하게
-영향을 미친다. 그리고 업무 로직은 문제가 발생했을 때 어디가 문제인지 명확하게 잘 드러나지만, 기술 지원
-로직은 적용이 잘 되고 있는지 아닌지 조차 파악하기 어려운 경우가 많다. 그래서 이런 기술 지원 로직들은
-가급적 수동 빈 등록을 사용해서 명확하게 드러내는 것이 좋다.
-애플리케이션에 광범위하게 영향을 미치는 기술 지원 객체는 수동 빈으로 등록해서 딱! 설정 정보에 바로
-나타나게 하는 것이 유지보수 하기 좋다
+<br>
 
-즈니스 로직 중에서 다형성을 적극 활용할 때
-의존관계 자동 주입 - 조회한 빈이 모두 필요할 때, List, Map을 다시 보자.
-DiscountService 가 의존관계 자동 주입으로 Map<String, DiscountPolicy> 에 주입을 받는 상황을
-생각해보자. 여기에 어떤 빈들이 주입될 지, 각 빈들의 이름은 무엇일지 코드만 보고 한번에 쉽게 파악할 수
-있을까? 내가 개발했으니 크게 관계가 없지만, 만약 이 코드를 다른 개발자가 개발해서 나에게 준 것이라면
-어떨까?
-자동 등록을 사용하고 있기 때문에 파악하려면 여러 코드를 찾아봐야 한다.
-이런 경우 수동 빈으로 등록하거나 또는 자동으로하면 특정 패키지에 같이 묶어두는게 좋다! 핵심은 딱 보고
-이해가 되어야 한다!
+## 실무 수동 빈 사용 팁
+
+애플리케이션은 크게 업무 로직과 기술 지원 로직으로 나눌 수 있습니다.
+
+업무 로직은 보통 컨트롤러, 서비스, 리포지토리 등 비즈니스 요구사항을 개발할 때 추가되거나 변경됩니다.
+
+기술 지원 로직은 데이터베이스 연결이나 공통 로그 처리처럼 업무 로직을 지원하기 위한 하부 기술이나 공통 기술들입니다. (AOP)
+
+업무 로직에서는 자동을 사용하고, 기술 지원 로직에서는 수동을 사용하는 것이 좋습니다. (수동 빈으로 등록해서 명확하게 드러내는 것이 유지보수하기 좋습니다.
+
+또, 비지니스 로직 중에서 다형성을 적극 활용할 때는 수동 빈으로 등록하는 것이 좋습니다.
+
+`Map<String, DiscountPolicy>`로 여러 개의 빈을 주입 받는 상황을 생각 해보겠습니다. 어떤 빈들이 주입될지 코드만 보고 한번에 파악하기 어렵습니다.
+
+이럴 때는 수동 빈으로 등록하여 특정 패키지에 같이 묶어두면 한눈에 파악하기 쉽습니다.
+
+```java
+@Configuration
+public class DiscountPolicyConfig {
+ 
+    @Bean
+    public DiscountPolicy rateDiscountPolicy() {
+        return new RateDiscountPolicy();
+    }
+    
+    @Bean
+    public DiscountPolicy fixDiscountPolicy() {
+        return new FixDiscountPolicy();
+    }
+}
+```
+
+<br>
+
+## 빈 생명주기 콜백
+
+스프링 빈은 객체를 생성하고 의존 관계 주입이 다 끝난 다음에 초기화 작업을 진행해야 합니다. 이를 위해 스프링은 의존관계 주입이 완료되면 스프링 빈에게 콜백 메서드를 통해서 초기화 시점을 알려주는 다양한 기능을 제공합니다.
+
+또한 스프링은 스프링 컨테이너가 종료되기 직전에 소멸 콜백을 줌으로써 안전하게 종료 작업을 진행할 수 있게 해주빈다.
+
+### 스프링 빈의 이벤트 라이프사이클
+
+스프링 컨테이너 생성 -> 스프링 빈 생성 -> 의존관계 주입 -> 초기화 콜백 -> 사용 -> 소멸전 콜백 -> 스프링 종료
+
+### 빈 등록 초기화, 소멸 메서드 지정으로 생명주기 콜백
+
+설정 정보에 `@Bean(initMethod = "init", destroyMethod = "close")`를 사용하면 초기화, 소멸 메서드를 지정할 수 있습니다.
+
+메서드 이름은 자유롭게 지정할 수 있고 스프링 빈이 스프링 코드에 의존하지 않습니다.
+
+코드가 아니라 설정 정보를 사용하기 때문에 코드를 고칠 수 없는 외부 라이브러리에도 초기화, 종료 메서드를 적용할 수 있습니다.
+
+`@Bean`의 `destroyMethod`는 추론기능이 있어서 close, shutdown 이름의 메서드를 자동으로 호출해줍니다. (추론 기능을 사용하지 않으려면 `destroyMethod = ""`로 지정하면 됩니다.)
+
+```java
+@Configuration
+public class AppConfig {
+    
+    @Bean(initMethod = "init", destroyMethod = "close")
+    public MemberService memberService() {
+        NetworkClient networkClient = new NetworkClient();
+        networkClient.setUrl("http://hello-spring.dev");
+        return networkClient;
+    }
+}
+
+public class NetworkClient {
+    private String url;
+    
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    
+    // ...
+    
+    public void init() {
+        System.out.println("NetworkClient.init");
+        connect();
+        call("초기화 연결 메시지");
+    }
+    
+    public void close() {
+        System.out.println("NetworkClient.close");
+        disconnect();
+    }
+}
+```
+
+### @PostConstruct, @PreDestroy로 생명 주기 콜백
+
+`@PostConstruct`는 초기화 메서드에, `@PreDestroy`는 소멸 메서드에 사용합니다.
+
+자바 표준으로 스프링이 아닌 다른 컨테이너에서도 동작합니다. 
+
+단점은 외부 라이브러리에 적용하지 못한다는 것인데 이럴 때는 `@Bean(initMethod = "init", destroyMethod = "close")`를 사용하면 됩니다.
+
+```java
+public class NetworkClient {
+    private String url;
+    
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    
+    // ...
+    
+    @PostConstruct
+    public void init() {
+        System.out.println("NetworkClient.init");
+        connect();
+        call("초기화 연결 메시지");
+    }
+    
+    @PreDestroy
+    public void close() {
+        System.out.println("NetworkClient.close");
+        disconnect();
+    }
+}
+```
+
+<br>
+
+## 빈 스코프
+
+### 개념
+
+빈 스코프는 빈이 존재할 수 있는 범위를 의미합니다.
+
+스프링 빈은 기본적으로 스프링 컨테이너의 시작과 함께 생성되어서 스프링 컨테이너가 종료될 때까지 유지됩니다. 
+
+이는 스프링 빈이 기본적으로 싱글톤 스코프로 생성되기 때문입니다.
+
+### 다양한 스코프 지원
+
+스프링에서는 다양한 스코프를 지원합니다.
+
+- 싱글톤: 기본 스코프, 스프링 컨테이너 시작과 종료까지 유지되는 가장 넓은 범위의 스코프입니다.
+- 프로토타입: 스프링 컨테이너는 프로토타입 빈의 생성과 의존관계 주입까지만 관여하고 더는 관리하지 않는 매우 짧은 범위의 스코프입니다.
+- 웹 관련 스코프
+  - request: 웹 요청이 들어오고 나갈 때 까지 유지되는 스코프입니다. (각각의 HTTP 요청마다 별도의 빈 인스턴스가 생성되고 관리됩니다.)
+  - session: 웹 세션이 생성되고 종료될 때 까지 유지되는 스코프입니다.
+  - application: 웹의 서블릿 컨텍스트와 같은 범위로 유지되는 스코프입니다.
+
+### 프로토타입 스코프
+
+싱글톤 빈을 조회하면 스프링 컨테이너는 항상 같은 인스턴스의 스프링 빈을 반환하지만 
+프로토타입 빈을 조회하면 스프링 컨테이너는 항상 새로운 인스턴스를 생성해서 반환합니다.
+
+프로토 타입 빈을 요청하면 스프링 컨테이너는 이 시점에 프로토타입 빈을 생성하고, 프로토타입 빈에 필요한 의존관계 주입합니다. 
+이후 스프링 컨테이너는 해당 빈을 관리하지 않습니다. (preDestroy 메서드 호출이 안됩니다.)
+
+![프로토타입 빈](../image/prototype_bean.png)
+
+**싱글톤 빈과 프로토타입 빈을 함께 사용할 때 문제점**
+
+싱글톤 빈 안에 프로토타입 빈을 주입받아 사용할 때 문제가 발생합니다.
+
+싱글톤 빈은 생성 시점에만 의존관계 주입을 받기 때문에 프로토타입 빈이 생성 시점에만 주입됩니다. 그 이후는 싱글톤과 같이 유지되어 변경되지 않습니다.
+
+**ObjectProvider**
+
+`ObjectProvider`는 지정한 빈을 컨테이너에서 대신 찾아주는  의존관계 탐색(DL, dependency lookup) 기능을 제공합니다.
+
+`ObjectProvider`를 사용하면 프로토타입 빈을 컨테이너에서 대신 찾아주기 때문에 프로토타입 빈을 여러 번 생성할 수 있습니다.
+
+```java
+@RequiredArgsConstructor
+@Component
+public class SingletonBean {
+    
+    private final ObjectProvider<PrototypeBean> prototypeBeanProvider;
+    
+    public int logic() {
+        PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
+        prototypeBean.addCount();
+        return prototypeBean.getCount();
+    }
+}
+```
+
+`ObjectProvider`의 `getObject()`를 호출하면 내부에서 스프링 컨테이너를 통해 해당 빈을 찾아서 반환합니다. (여기서 해당 빈이 프로토타입 빈이면 매번 새로운 인스턴스를 생성해서 반환합니다.)
+
+`JSR-330 Provider`를 사용해도 동일한 기능을 사용할 수 있습니다.
+
+보통 실무에서는 싱글톤 빈으로 모든 문제를 해결할 수 있기 때문에 프로토타입 빈을 직접 사용하는 일은 드뭅니다.
+
+### 웹 스코프
+
+웹 스코프는 웹 환경에서만 동작합니다.
+
+**request 스코프**
+
+```java
+@Component
+@Scope(value = "request")
+public class MyLogger {
+private String uuid;
+    private String requestURL;
+    
+    public void setRequestURL(String requestURL) {
+        this.requestURL = requestURL;
+    }
+    
+    public void log(String message) {
+        System.out.println("[" + uuid + "][" + requestURL + "] " + message);
+    }
+    
+    @PostConstruct
+    public void init() {
+        uuid = UUID.randomUUID().toString();
+        System.out.println("[" + uuid + "] request scope bean create: " + this);
+    }
+    
+    @PreDestroy
+    public void close() {
+        System.out.println("[" + uuid + "] request scope bean close: " + this);
+    }
+}
+
+@RequiredArgsConstructor
+@Controller
+public class LogDemoController {
+    
+    private final MyLogger myLogger;
+    
+    @RequestMapping("log-demo")
+    @ResponseBody
+    public String logDemo(HttpServletRequest request) {
+        String requestURL = request.getRequestURL().toString();
+        myLogger.setRequestURL(requestURL);
+        
+        myLogger.log("controller test");
+        return "OK";
+    }
+}
+```
+
+이 빈은 HTTP 요청 당 하나씩 생성되고, HTTP 요청이 끝나는 시점에 소멸됩니다. HTTP 요청 당 각각 구분되므로 다른 HTTP 요청 때문에 값이 섞이는 일은 없습니다.
+
+스프링이 실행하는 시점에 싱글톤 빈은 생성해서 주입이 가능하지만 request 빈은 요청이와야 생성되기 때문에 주입이 불가능합니다.
+
+이러한 문제를 해결하기 위해 가짜 프록시 객체를 만들어서 주입하는 방법이 있습니다.
+
+```java
+@Component
+@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS) // 클래스면 TARGET_CLASS, 인터페이스면 INTERFACES
+public class MyLogger {
+    // ...
+}
+```
+
+CGLIB을 사용해서 클래스를 상속 받은 가짜 프록시 객체를 만들어 주입하여 문제를 해결합니다.
+
+가짜 프록시 객체는 요청이 오면 그때 내부에서 진짜 빈을 요청하는 위임 로직이 들어있습니다.
+
+즉, 껍데기를 주입해놓고 실제 호출할 때 진짜를 찾아서 동작하게 되는 것입니다.
+
+> requestURL을 MyLogger에 저장하는 부분은 컨트롤러보다는 공통처리가 가능한 인터셉터에서 처리하는 것이 좋습니다. (예제 단순화)
+
+나머지 웹 스코프도 범위만 다르지 동작 방식은 비슷합니다.
+
+특별한 스코프는 최소화해서 사용하는 것이 중요합니다. 무분별하게 사용하면 유지보수가 어려워집니다.
