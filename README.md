@@ -13,10 +13,13 @@ This repository is dedicated to studying Spring and JPA.
 
 ### Spring
 
-[[ Spring Core ]]()
+[[ Spring Core ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_core)
 
 - 객체 지향 프로그래밍
 - 스프링 컨테이너
+- 스프링 빈
+
+
 
 **Spring**
 
