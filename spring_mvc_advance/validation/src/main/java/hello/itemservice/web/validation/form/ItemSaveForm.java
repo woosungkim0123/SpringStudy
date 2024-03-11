@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NonNull;
 import org.hibernate.validator.constraints.Range;
 
 
@@ -14,7 +13,7 @@ public class ItemSaveForm {
     @NotBlank
     private String itemName;
 
-    @NonNull
+    @NotNull
     @Range(min = 1000, max=10000)
     private Integer price;
 

@@ -13,13 +13,13 @@ project(':item_service').projectDir = new File('spring_mvc_basic/item_service')
 
 // SPRING_03_MVC2
 include "form"
-project(':form').projectDir = new File('spring_mvc_advance/01_form')
+project(':form').projectDir = new File('spring_mvc_advance/form')
 include "use_thymeleaf"
-project(':use_thymeleaf').projectDir = new File('spring_mvc_advance/01_use_thymeleaf')
+project(':use_thymeleaf').projectDir = new File('spring_mvc_advance/use_thymeleaf')
 include "message_global"
-project(':message_global').projectDir = new File('spring_mvc_advance/02_message_global')
+project(':message_global').projectDir = new File('spring_mvc_advance/message_global')
 include "validation"
-project(':validation').projectDir = new File('spring_mvc_advance/03_validation')
+project(':validation').projectDir = new File('spring_mvc_advance/validation')
 include "login"
 project(':login').projectDir = new File('spring_mvc_advance/04_login')
 include "exception"
