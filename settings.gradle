@@ -21,7 +21,7 @@ project(':message_global').projectDir = new File('spring_mvc_advance/message_glo
 include "validation"
 project(':validation').projectDir = new File('spring_mvc_advance/validation')
 include "login"
-project(':login').projectDir = new File('spring_mvc_advance/04_login')
+project(':login').projectDir = new File('spring_mvc_advance/login')
 include "exception"
 project(':exception').projectDir = new File('spring_mvc_advance/05_exception')
 include "type_converter"

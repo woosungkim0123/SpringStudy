@@ -14,4 +14,12 @@
 
 ## Validation
 
-[[ Validation 살펴보기 ]](
+- 검증 방법
+
+[[ Validation 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_mvc_advance/validation)
+
+## 로그인 처리
+
+- 쿠키, 세션
+
+[[ 로그인 처리 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_mvc_advance/login)
