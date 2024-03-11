@@ -4,7 +4,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
 
@@ -31,6 +30,7 @@ public class SingletonWithPrototypeTest1 {
         ClientBean clientBean1 = ac.getBean(ClientBean.class);
         int count1 = clientBean1.logic();
         assertThat(count1).isEqualTo(1);
+
         ClientBean clientBean2 = ac.getBean(ClientBean.class);
         int count2 = clientBean2.logic();
         assertThat(count2).isEqualTo(1);
@@ -39,14 +39,14 @@ public class SingletonWithPrototypeTest1 {
     @Scope("singleton") // 기본값이라 안해줘도됨
     static class ClientBean {
 
-        private final Provider<PrototypeBean> prototypeBeansProvider;
+        private final ObjectProvider<PrototypeBean> prototypeBeansProvider;
 
-        public ClientBean(Provider<PrototypeBean> prototypeBeansProvider) {
+        public ClientBean(ObjectProvider<PrototypeBean> prototypeBeansProvider) {
             this.prototypeBeansProvider = prototypeBeansProvider;
         }
 
         public int logic() {
-            PrototypeBean prototypeBean = prototypeBeansProvider.get();
+            PrototypeBean prototypeBean = prototypeBeansProvider.getObject();
             prototypeBean.addCount();
             return prototypeBean.getCount();
         }
