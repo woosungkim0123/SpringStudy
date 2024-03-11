@@ -1,4 +1,4 @@
-# Spring MVC
+# Spring MVC - 1
 
 ## 서블릿 ~ MVC 패턴
 
@@ -9,11 +9,9 @@
 
 [[ 서블릿 ~ MVC 패턴 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_mvc_basic/servlet)
 
-## 스프링 MVC 기본 기능
+## 스프링 MVC
 
-- 
+- 스프링 MVC의 기본 기능
 
-[[ 스프링 MVC 기본 기능 살펴보기 ]](
-
-
+[[ 스프링 MVC 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_mvc_basic/use_mvc)
 

@@ -19,17 +19,13 @@ This repository is dedicated to studying Spring and JPA.
 - 스프링 컨테이너
 - 스프링 빈
 
+[[ Spring MVC - 1 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_mvc_basic)
+
+- 서블릿 ~ MVC 패턴
+- 요청, 응답 매핑
+- HTTP 메시지 컨버터
 
 
-**Spring**
-
-- [SPRING_00_HELLO](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8)
-- [SPRING_01_CORE](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B8%B0%EB%B3%B8%ED%8E%B8)
-- [SPRING_02_MVC_1](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-mvc-1)
-- [SPRING_03_MVC_2](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-mvc-2)
-- [SPRING_04_DB_1](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-db-1)
-- [SPRING_05_DB_2](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-db-2)
-- [SPRING_06_ADVANCED](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)
 
 ### 7. AOP
 
