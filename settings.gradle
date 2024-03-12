@@ -1,9 +1,9 @@
 rootProject.name = 'spring_jpa_deep_dive'
 
-// SPRING_01_CORE
+// SPRING
+
 include "spring_core"
 
-// SPRING_02_MVC1
 include "servlet"
 project(':servlet').projectDir = new File('spring_mvc_basic/servlet')
 include "use_mvc"
@@ -11,7 +11,6 @@ project(':use_mvc').projectDir = new File('spring_mvc_basic/use_mvc')
 include "item_service"
 project(':item_service').projectDir = new File('spring_mvc_basic/item_service')
 
-// SPRING_03_MVC2
 include "form"
 project(':form').projectDir = new File('spring_mvc_advance/form')
 include "use_thymeleaf"
@@ -29,16 +28,13 @@ project(':type_converter').projectDir = new File('spring_mvc_advance/06_type_con
 include "file_upload"
 project(':file_upload').projectDir = new File('spring_mvc_advance/07_file_upload')
 
-// SPRING 04_DB1
 include "spring_jdbc_basic"
 
-// SPRING_05_DB2
 include "access_data_skills"
 project(':access_data_skills').projectDir = new File('spring_jdbc_advance/access_data_skills')
 include "transaction"
 project(':transaction').projectDir = new File('spring_jdbc_advance/transaction')
 
-// SPRING_06_ADVANCED
 include "log_tracker"
 project(':log_tracker').projectDir = new File('spring_aop/log_tracker')
 include "proxy"
@@ -46,15 +42,16 @@ project(':proxy').projectDir = new File('spring_aop/proxy')
 include "aop"
 project(':aop').projectDir = new File('spring_aop/aop')
 
-// SPRING_07_SPRING_BOOT
 include "was"
-project(':was').projectDir = new File('spring_evolution/was')
+project(':was').projectDir = new File('spring_boot/was')
 include "embed"
-project(':embed').projectDir = new File('spring_evolution/embed')
+project(':embed').projectDir = new File('spring_boot/embed')
 include "autoconfig"
-project(':autoconfig').projectDir = new File('spring_evolution/autoconfig')
+project(':autoconfig').projectDir = new File('spring_boot/autoconfig')
 
-// JPA_01_BASIC
+
+// JPA
+
 include "jpa_book"
 project(':jpa_book').projectDir = new File('jpa_basic/jpa_book')
 include "jpql"
@@ -62,11 +59,8 @@ project(':jpql').projectDir = new File('jpa_basic/jpql')
 include "before_abstraction"
 project(':before_abstraction').projectDir = new File('jpa_basic/before_abstraction')
 
-// JPA_02_PRACTICE
-include "jpa_practice"
+include "jpa_utilization"
 
-// JPA_03_SPRING_DATA_JPA
 include "jpa_spring_data_jpa"
 
-// JPA_04_QUERYDSL
 include "jpa_querydsl"

@@ -1,13 +1,8 @@
 # Spring and JPA Deep Dive
 
-## Description
+## 소개
 
-This repository is dedicated to studying Spring and JPA.
-
-## Topics
-
-- Spring (Java 11)
-- JPA
+스프링과 JPA에 대한 심층적인 학습을 위한 저장소입니다.
 
 ## 목차
 
@@ -25,33 +20,32 @@ This repository is dedicated to studying Spring and JPA.
 - 요청, 응답 매핑
 - HTTP 메시지 컨버터
 
+[[ Spring MVC - 2 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_mvc_advanced)
 
+- 타임리프 기초
+- Form 처리
+- 메세지, 국제화
+- Validation
+- 로그인 처리
 
-### 7. AOP
+[[ Spring JDBC - 1 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_jdbc_basic)
 
-**로그 추적기**
+[[ Spring JDBC - 2 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_jdbc_advance)
 
-- 쓰레드 로컬(Thread Local) 사용
-- 템플릿 메서드 패턴 사용
-- 템플릿 콜백 패턴 사용
+[[ Spring AOP ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop)
 
-[[ 로그 추적기 프로젝트 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker)
+- 로그 추적기
+- 로그 추적기 (프록시)
+- AOP 적용
 
-<br>
+[[ Spring Boot ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_boot)
 
-**로그 추적기 (프록시)**
+### JPA
 
-- 프록시 직접 사용
-- 동적 프록시 사용
+[[ JPA - 1 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/jpa_basic)
 
-[[ 로그 추적기 (프록시) 프로젝트 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/proxy)
+[[ JPA - 2 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/jpa_utilization)
 
+[[ JPA Spring Data JPA ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/jpa_spring_data_jpa)
 
-
-
-**JPA**
-
-- [JPA_01_BASIC](https://www.inflearn.com/course/ORM-JPA-Basic)
-- [JPA_02_PRACTICE](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1)
-- [JPA_03_SPRING_DATA_JPA](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%ED%84%B0-JPA-%EC%8B%A4%EC%A0%84)
-- [JPA_04_QUERYDSL](https://www.inflearn.com/course/Querydsl-%EC%8B%A4%EC%A0%84)
+[[ JPA QueryDSL ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/jpa_querydsl)

@@ -12,8 +12,9 @@ import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -34,9 +35,10 @@ class MemberServiceTest {
         // when
         Long savedId = memberService.join(member);
 
-        // then
+        Optional<Member> optionalMember = memberRepository.findById(savedId);
 
-        assertEquals(member, memberRepository.findById(savedId));
+        // then
+        assertEquals(member, optionalMember.get());
     }
 
     @Test

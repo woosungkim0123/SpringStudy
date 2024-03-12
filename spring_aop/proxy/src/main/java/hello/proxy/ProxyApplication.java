@@ -25,9 +25,9 @@ import org.springframework.context.annotation.Import;
 // @Import({BeanPostProcessorConfig.class})
 //@Import({ProxyFactoryConfigV2.class, LogTraceConfig.class})
 //@Import({ProxyFactoryConfigV1.class, LogTraceConfig.class})
-//@Import({DynamicFilterConfig.class, LogTraceConfig.class})
-//@Import({DynamicBasicConfig.class, LogTraceConfig.class})
-@Import({ConcreteProxyConfig.class, InterfaceProxyConfig.class})
+@Import(DynamicFilterConfig.class)
+//@Import(DynamicBasicConfig.class)
+//@Import({ConcreteProxyConfig.class, InterfaceProxyConfig.class})
 @SpringBootApplication(scanBasePackages = "hello.proxy.app.v3")
 public class ProxyApplication {
 

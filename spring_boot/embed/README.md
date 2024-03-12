@@ -7,7 +7,7 @@
 
 ## 주요 목차
 
-[[ 내장 톰캣 (Embedded Tomcat) 배포 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_evolution/embed/notion)
+[[ 내장 톰캣 (Embedded Tomcat) 배포 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_boot/embed/notion)
 
 - 내장 톰캣
 - Fat Jar
