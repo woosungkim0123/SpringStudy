@@ -20,7 +20,7 @@
 - 요청, 응답 매핑
 - HTTP 메시지 컨버터
 
-[[ Spring MVC - 2 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_mvc_advanced)
+[[ Spring MVC - 2 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_mvc_advance)
 
 - 타임리프 기초
 - Form 처리
