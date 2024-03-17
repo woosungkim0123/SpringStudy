@@ -8,7 +8,9 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.NoSuchElementException;
 
-
+/**
+ * 트랜잭션을 위해 같은 Connection을 사용하는 Repository (서비스에서 Connection을 넘겨주는 방식)
+ */
 @Slf4j
 public class MemberRepositoryV2 {
 
@@ -16,6 +18,33 @@ public class MemberRepositoryV2 {
 
     public MemberRepositoryV2(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public Member findById(Connection con, String memberId) throws SQLException {
+        String sql = "select * from member where member_id = ?";
+        PreparedStatement pstmt = null;
+
+        ResultSet rs = null;
+        try {
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, memberId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Member member = new Member();
+                member.setMemberId(rs.getString("member_id"));
+                member.setMoney(rs.getInt("money"));
+                return member;
+            } else {
+                throw new NoSuchElementException("member not found memberId=" + memberId);
+            }
+        } catch (SQLException e) {
+            log.error("db error", e);
+            throw e;
+        } finally {
+            //connection은 여기서 닫지 않는다.
+            JdbcUtils.closeResultSet(rs);
+            JdbcUtils.closeStatement(pstmt);
+        }
     }
 
     public Member save(Member member) throws SQLException {
@@ -60,33 +89,6 @@ public class MemberRepositoryV2 {
             throw e;
         } finally {
             close(con, pstmt, rs);
-        }
-    }
-
-    public Member findById(Connection con, String memberId) throws SQLException {
-        String sql = "select * from member where member_id = ?";
-        PreparedStatement pstmt = null;
-
-        ResultSet rs = null;
-        try {
-            pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, memberId);
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                Member member = new Member();
-                member.setMemberId(rs.getString("member_id"));
-                member.setMoney(rs.getInt("money"));
-                return member;
-            } else {
-                throw new NoSuchElementException("member not found memberId=" + memberId);
-            }
-        } catch (SQLException e) {
-            log.error("db error", e);
-            throw e;
-        } finally {
-            //connection은 여기서 닫지 않는다.
-            JdbcUtils.closeResultSet(rs);
-            JdbcUtils.closeStatement(pstmt);
         }
     }
 
