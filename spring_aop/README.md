@@ -1,4 +1,4 @@
-# spring aop
+# Spring AOP
 
 ## 로그 추적기
 
@@ -7,8 +7,6 @@
 - 템플릿 콜백 패턴 사용
 
 [[ 로그 추적기 프로젝트 살펴보기 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop/log_tracker)
-
-<br>
 
 ## 로그 추적기 (프록시)
 

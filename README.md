@@ -1,4 +1,4 @@
-# Spring and JPA Deep Dive
+# Spring, JPA Deep Dive
 
 ## 소개
 
