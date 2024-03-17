@@ -30,6 +30,9 @@
 
 [[ Spring JDBC - 1 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_jdbc_basic)
 
+- JDBC 이해
+- 트랜잭션 이해
+
 [[ Spring JDBC - 2 ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_jdbc_advance)
 
 [[ Spring AOP ]](https://github.com/woosungkim0123/spring-jpa-deep-dive/tree/master/spring_aop)
